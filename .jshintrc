@@ -6,7 +6,6 @@
   "trailing":true,
   "expr":true,
   "unused":true,
-  "undef":true,
   "forin":true,
   "eqeqeq": true,
   "eqnull":true,
