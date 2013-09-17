@@ -7,12 +7,12 @@ Array.prototype.sum = function() {
   return this.reduce(function(x, y) { return x + y; });
 };
 
-Array.prototype.first = function() {
+Array.prototype.head = function() {
   if(this.length === 0 ) throw "NoSuchElement";
   return this[0];
 };
 
-Array.prototype.firstOption = function() {
+Array.prototype.headOption = function() {
   return Option.apply(this[0]);
 };
 

@@ -13,13 +13,13 @@ TestCase("Test Array Prototype",{
     assertEquals(6, actual2);
   },
 
-  "test Array.prototype.first" : function() {
-    var actual = ["foo", "bar"].first();
+  "test Array.prototype.head" : function() {
+    var actual = ["foo", "bar"].head();
     assertEquals("foo", actual);
   },
 
-  "test Array.prototype.firstOption" : function() {
-    var actual = [].firstOption();
+  "test Array.prototype.headOption" : function() {
+    var actual = [].headOption();
     assertEquals(None, actual);
   },
 
