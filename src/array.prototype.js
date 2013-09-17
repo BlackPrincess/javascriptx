@@ -25,6 +25,26 @@ Array.prototype.lastOption = function() {
   return Option.apply(this[this.length -1 ]);
 };
 
+Array.prototype.zip = function(arr) {
+  var ret = [];
+  var base = (this.length < arr.length) ? this : arr;
+  for(var i = 0, l = base.length; i < l; ++i) {
+      ret[i] = [this[i], arr[i]];
+  }
+  return ret;
+};
+
+Array.prototype.zipAll = function(arr, defaultA, defaultB) {
+  var ret = [];
+  var base = (this.length > arr.length) ? this : arr;
+  for(var i = 0, l = base.length; i < l; ++i) {
+      var a = (this[i] === undefined) ? defaultA : this[i];
+      var b = (arr[i] === undefined) ? defaultB : arr[i];
+      ret[i] = [a, b];
+  }
+  return ret;
+};
+
 Array.prototype.clone = function() {
   return Array.apply(null, this);
 };

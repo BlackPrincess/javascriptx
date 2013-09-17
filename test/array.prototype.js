@@ -28,6 +28,30 @@ TestCase("Test Array Prototype",{
     assertEquals("bar", actual);
   },
 
+  "test Array.prototype.zip" : function() {
+    var target = ["foo", "bar", "hoge"];
+    var actual = target.zip(["FOO", "BAR"]);
+    assertEquals("foo", actual[0][0]);
+    assertEquals("FOO", actual[0][1]);
+    assertEquals("bar", actual[1][0]);
+    assertEquals("BAR", actual[1][1]);
+    assertUndefined(actual[2]);
+  },
+
+  "test Array.prototype.zipAll" : function() {
+    var target = ["foo", "bar", "hoge"];
+    var actual = target.zipAll(["FOO", "BAR"], "defaultA", "defaultB");
+    assertEquals("foo", actual[0][0]);
+    assertEquals("FOO", actual[0][1]);
+    assertEquals("bar", actual[1][0]);
+    assertEquals("BAR", actual[1][1]);
+    assertEquals("hoge", actual[2][0]);
+    assertEquals("defaultB", actual[2][1]);
+    var actual = target.zipAll(["FOO", "BAR", "HOGE", "PIYO"], "defaultA", "defaultB");
+    assertEquals("defaultA", actual[3][0]);
+    assertEquals("PIYO", actual[3][1]);
+  },
+
   "test Array.prototype.clone" : function() {
     var actual = [1, 2];
     actual.clone().shift();
