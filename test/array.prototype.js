@@ -28,6 +28,16 @@ TestCase("Test Array Prototype",{
     assertEquals("bar", actual);
   },
 
+  "test Array.prototype.get" : function() {
+    var actual = ["foo", "bar"].get(1);
+    assertEquals("bar", actual);
+  },
+
+  "test Array.prototype.getOrElse" : function() {
+    var actual = ["foo", "bar"].getOrElse(2, "hoge");
+    assertEquals("hoge", actual);
+  },
+
   "test Array.prototype.zip" : function() {
     var target = ["foo", "bar", "hoge"];
     var actual = target.zip(["FOO", "BAR"]);
