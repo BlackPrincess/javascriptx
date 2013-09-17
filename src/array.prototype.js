@@ -35,7 +35,8 @@ Array.prototype.getOrElse = function(i, or) {
 
 
 /**
- * Returns a sequence formed from this sequence and another sequence by combining corresponding elements in pairs
+ * Returns a sequence formed from this sequence and another sequence 
+ * by combining corresponding elements in pairs
  * if the two sequence is not same length, the length of returning sequence is same short one's.
  * @param {Array} arr
  * @return {Array} combined corresponding elements in pairs
@@ -50,8 +51,10 @@ Array.prototype.zip = function(arr) {
 };
 
 /**
- * Returns a sequence formed from this sequence and another sequence by combining corresponding elements in pairs
- * if the two sequence is not same length, this sequence will be padded with defaultA or another sequence will be padded with defaultB.
+ * Returns a sequence formed from this sequence and another sequence 
+ * by combining corresponding elements in pairs
+ * if the two sequence is not same length, 
+ * this sequence will be padded with defaultA or another sequence will be padded with defaultB.
  * @param {Array} arr
  * @param {Object} defaultA 
  * @param {Object} defaultB
