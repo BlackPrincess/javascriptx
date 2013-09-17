@@ -60,4 +60,177 @@ TestCase("Test Either",{
     var excepted = Either.merge(Right(val));
     assertEquals(excepted, actual);
   },
+
+  /* ****************************************************** 
+  * LeftProjection 
+  ****************************************************** */
+  "test LeftProjection.get" : function() {
+    var val = Either.LeftProjection(Left("test"));
+    assertEquals("test", val.get());
+  },
+
+  "test LeftProjection.foreach" : function() {
+    
+    assertEquals("foo", Either.LeftProjection(Left("test")).foreach(function(){
+      return "foo";
+    }));
+    assertUndefined(Either.LeftProjection(Right("test")).foreach(function(){
+      return "foo";
+    }));
+  },
+
+  "test LeftProjection.getOrElse" : function() {
+    var val = Either.LeftProjection(Left("test")).getOrElse("a");
+    assertEquals("test", Either.LeftProjection(Left("test")).getOrElse("a"));
+    assertEquals("a", Either.LeftProjection(Right("test")).getOrElse("a"));
+  },
+
+  "test LeftProjection.forall" : function() {
+    assertFalse(Either.LeftProjection(Left("test")).forall(function(a) {
+      return a !== "test";
+    }));
+    assertTrue(Either.LeftProjection(Right("test")).forall(function(a) {
+      return a !== "test";
+    }));
+  },
+
+  "test LeftProjection.exists" : function() {
+    assertTrue(Either.LeftProjection(Left("test")).exists(function(a) {
+      return a === "test";
+    }));
+    assertFalse(Either.LeftProjection(Right("test")).exists(function(a) {
+      return a === "test";
+    }));
+  },
+
+  "test LeftProjection.flatMap" : function() {
+    assertEquals("testfoo", Either.LeftProjection(Left("test")).flatMap(function(a) {
+      return a + "foo";
+    }));
+    assertEquals(Right("test"), Either.LeftProjection(Right("test")).flatMap(function(a) {
+      return a + "foo";
+    }));
+  },
+
+  "test LeftProjection.map" : function() {
+    assertEquals(Left("testfoo"), Either.LeftProjection(Left("test")).map(function(a) {
+      return a + "foo";
+    }));
+    assertEquals(None, Either.LeftProjection(Right("test")).map(function(a) {
+      return a + "foo";
+    }));
+  },
+
+  "test LeftProjection.filter" : function() {
+    assertEquals(Left("test"), Either.LeftProjection(Left("test")).filter(function(a) {
+      return a === "test";
+    }).get());
+    assertEquals(None, Either.LeftProjection(Left("test")).filter(function(a) {
+      return a !== "test";
+    }));
+    assertEquals(None, Either.LeftProjection(Right("test")).filter(function(a) {
+      return a === "test";
+    }));
+  },
+
+  "test LeftProjection.toSeq" : function() {
+    assertEquals(["test"], Either.LeftProjection(Left("test")).toSeq());
+    assertEquals([], Either.LeftProjection(Right("test")).toSeq());
+  },
+
+  "test LeftProjection.toSeq" : function() {
+    assertEquals(["test"], Either.LeftProjection(Left("test")).toSeq());
+    assertEquals([], Either.LeftProjection(Right("test")).toSeq());
+  },
+
+  "test LeftProjection.toOption" : function() {
+    assertEquals(Some("test").get(), Either.LeftProjection(Left("test")).toOption().get());
+    assertEquals(None, Either.LeftProjection(Right("test")).toOption());
+  },
+  /* ****************************************************** 
+  * RightProjection 
+  ****************************************************** */
+  "test RightProjection.get" : function() {
+    var val = Either.RightProjection(Right("test"));
+    assertEquals("test", val.get());
+  },
+
+  "test RightProjection.foreach" : function() {
+    
+    assertEquals("foo", Either.RightProjection(Right("test")).foreach(function(){
+      return "foo";
+    }));
+    assertUndefined(Either.RightProjection(Left("test")).foreach(function(){
+      return "foo";
+    }));
+  },
+
+  "test RightProjection.getOrElse" : function() {
+    var val = Either.RightProjection(Right("test")).getOrElse("a");
+    assertEquals("test", Either.RightProjection(Right("test")).getOrElse("a"));
+    assertEquals("a", Either.RightProjection(Left("test")).getOrElse("a"));
+  },
+
+  "test RightProjection.forall" : function() {
+    assertFalse(Either.RightProjection(Right("test")).forall(function(a) {
+      return a !== "test";
+    }));
+    assertTrue(Either.RightProjection(Left("test")).forall(function(a) {
+      return a !== "test";
+    }));
+  },
+
+  "test RightProjection.exists" : function() {
+    assertTrue(Either.RightProjection(Right("test")).exists(function(a) {
+      return a === "test";
+    }));
+    assertFalse(Either.RightProjection(Left("test")).exists(function(a) {
+      return a === "test";
+    }));
+  },
+
+  "test RightProjection.flatMap" : function() {
+    assertEquals("testfoo", Either.RightProjection(Right("test")).flatMap(function(a) {
+      return a + "foo";
+    }));
+    assertEquals(Right("test"), Either.RightProjection(Left("test")).flatMap(function(a) {
+      return a + "foo";
+    }));
+  },
+
+  "test RightProjection.map" : function() {
+    assertEquals(Right("testfoo"), Either.RightProjection(Right("test")).map(function(a) {
+      return a + "foo";
+    }));
+    assertEquals(None, Either.RightProjection(Left("test")).map(function(a) {
+      return a + "foo";
+    }));
+  },
+
+  "test RightProjection.filter" : function() {
+    assertEquals(Right("test"), Either.RightProjection(Right("test")).filter(function(a) {
+      return a === "test";
+    }).get());
+    assertEquals(None, Either.RightProjection(Right("test")).filter(function(a) {
+      return a !== "test";
+    }));
+    assertEquals(None, Either.RightProjection(Left("test")).filter(function(a) {
+      return a === "test";
+    }));
+  },
+
+  "test RightProjection.toSeq" : function() {
+    assertEquals(["test"], Either.RightProjection(Right("test")).toSeq());
+    assertEquals([], Either.RightProjection(Left("test")).toSeq());
+  },
+
+  "test RightProjection.toSeq" : function() {
+    assertEquals(["test"], Either.RightProjection(Right("test")).toSeq());
+    assertEquals([], Either.RightProjection(Left("test")).toSeq());
+  },
+
+  "test RightProjection.toOption" : function() {
+    assertEquals(Some("test").get(), Either.RightProjection(Right("test")).toOption().get());
+    assertEquals(None, Either.RightProjection(Left("test")).toOption());
+  },
 });

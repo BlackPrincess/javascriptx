@@ -1,5 +1,4 @@
-function Either() {
-}
+function Either() {}
 
 Either.prototype.left = function() {
   return Either.LeftProjection(this);
@@ -71,40 +70,46 @@ function LeftProjection(e) {
     }
   };
 
-  this.foreach = function() {
-    throw "Not implements Error";
+  this.foreach = function(f) {
+    if(e.isLeft) {
+      return f(e.a);
+    }
   };
 
-  this.getOrElse = function() {
-    throw "Not implements Error";
+  this.getOrElse = function(or) {
+    return e.isLeft ? e.a : or;
   };
 
-  this.forall = function() {
-    throw "Not implements Error";
+  this.forall = function(f) {
+    return e.isLeft ? f(e.a) : true;
   };
 
-  this.exists = function() {
-    throw "Not implements Error";
+  this.exists = function(f) {
+    return e.isLeft ? f(e.a) : false;
   };
 
-  this.flatMap = function() {
-    throw "Not implements Error";
+  this.flatMap = function(f) {
+    return e.isLeft ? f(e.a) : Right(e.b);
   };
 
-  this.map = function() {
-    throw "Not implements Error";
+  this.map = function(f) {
+    return e.isLeft ? Left(f(e.a)) : None;
   };
 
-  this.filter = function() {
-    throw "Not implements Error";
+  this.filter = function(p) {
+    if(e.isLeft) {
+      return (p(e.a)) ? Some(Left(e.a)) : None;
+    } else {
+      return None;
+    }
   };
 
   this.toSeq = function() {
-    throw "Not implements Error";
+    return e.isLeft ? [e.a] : [];
   };
 
   this.toOption = function() {
-    throw "Not implements Error";
+    return e.isLeft ? Some(e.a) : None;
   };
 }
 
@@ -117,39 +122,45 @@ function RightProjection(e) {
     }
   };
 
-  this.foreach = function() {
-    throw "Not implements Error";
+  this.foreach = function(f) {
+    if(e.isRight) {
+      return f(e.b);
+    }
   };
 
-  this.getOrElse = function() {
-    throw "Not implements Error";
+  this.getOrElse = function(or) {
+    return e.isRight ? e.b : or;
   };
 
-  this.forall = function() {
-    throw "Not implements Error";
+  this.forall = function(f) {
+    return e.isRight ? f(e.b) : true;
   };
 
-  this.exists = function() {
-    throw "Not implements Error";
+  this.exists = function(f) {
+    return e.isRight ? f(e.b) : false;
   };
 
-  this.flatMap = function() {
-    throw "Not implements Error";
+  this.flatMap = function(f) {
+    return e.isRight ? f(e.b) : Right(e.a);
   };
 
-  this.map = function() {
-    throw "Not implements Error";
+  this.map = function(f) {
+    return e.isRight ? Right(f(e.b)) : None;
   };
 
-  this.filter = function() {
-    throw "Not implements Error";
+  this.filter = function(p) {
+    if(e.isRight) {
+      return (p(e.b)) ? Some(Right(e.b)) : None;
+    } else {
+      return None;
+    }
   };
 
   this.toSeq = function() {
-    throw "Not implements Error";
+    return e.isRight ? [e.b] : [];
   };
 
   this.toOption = function() {
-    throw "Not implements Error";
+    return e.isRight ? Some(e.b) : None;
   };
 }
