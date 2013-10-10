@@ -46,6 +46,11 @@ TestCase("Test String Prototype", {
     assertEquals("abcd", "abcd".right(10));
   },
 
+  "test String.prototype.contains" : function () {
+    assertTrue("abc".contains("ab"));
+    assertFalse("abc".contains("d"));
+  },
+
   "test String.prototype.startsWith" : function() {
     assertTrue("abcd".startsWith("ab"));
     assertFalse("abcd".startsWith("cd"));

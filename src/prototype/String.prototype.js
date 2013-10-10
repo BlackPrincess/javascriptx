@@ -51,6 +51,10 @@ String.prototype.right = function(length) {
   return this.substring(start, this.length);
 };
 
+String.prototype.contains = function(str) {
+  return this.indexOf(str) !== -1;
+};
+
 /**
  * 先頭がstrで始まっているかどうかを返します。
  * @param str
