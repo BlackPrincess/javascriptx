@@ -1,15 +1,23 @@
+String.prototype.isEmpty = function() {
+  return this.length === 0;
+};
+
+String.prototype.nonEmpty = function() {
+  return this.length !== 0;
+};
+
 String.prototype.head = function() {
-  if(this.length === 0 ) throw "NoSuchElement";
+  if(this.isEmpty()) throw "NoSuchElement";
   return this.charAt(0);
 };
 
 String.prototype.headOption = function() {
-  if(this.length === 0 ) return None;
+  if(this.isEmpty()) return None;
   return this.head();
 };
 
 String.prototype.last = function() {
-  if(this.length === 0 ) throw "NoSuchElement";
+  if(this.isEmpty()) throw "NoSuchElement";
   return this.charAt(this.length - 1);
 };
 
@@ -18,7 +26,7 @@ String.prototype.last = function() {
  * @return {Option[String]} 最初の文字
  */
 String.prototype.lastOption = function() {
-  if(this.length === 0 ) return None;
+  if(this.isEmpty()) return None;
   return this.last();
 };
 

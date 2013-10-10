@@ -1,5 +1,15 @@
 TestCase("Test String Prototype", {
 
+  "test String.prototype.isEmpty" : function() {
+    assertTrue("".isEmpty());
+    assertFalse("a".isEmpty());
+  },
+
+  "test String.prototype.nonEmpty" : function() {
+    assertFalse("".nonEmpty());
+    assertTrue("a".nonEmpty());
+  },
+
   "test String.prototype.head" : function() {
     assertNoException(function() {"abc".last();});
     var actual = "abc".head();
