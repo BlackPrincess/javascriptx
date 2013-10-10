@@ -1,4 +1,28 @@
-TestCase("Test String Prototype",{
+TestCase("Test String Prototype", {
+
+  "test String.prototype.head" : function() {
+    assertNoException(function() {"abc".last();});
+    var actual = "abc".head();
+    assertEquals("a", actual);
+    assertException(function(){ "".last() });
+  },
+
+  "test String.prototype.headOption" : function() {
+    var actual = "".headOption();
+    assertEquals(None, actual);
+  },
+
+  "test String.prototype.last" : function() {
+    assertNoException(function() {"abc".last();});
+    var actual = "abc".last();
+    assertEquals("c", actual);
+    assertException(function(){ "".last() });
+  },
+
+  "test String.prototype.lastOption" : function() {
+    var actual = "".lastOption();
+    assertEquals(None, actual);
+  },
 
   "test String.prototype.format": function(){
     var actual = "{0} is Foo.{1} is Bar".format("Foo", "Bar");

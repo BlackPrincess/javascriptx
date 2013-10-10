@@ -1,3 +1,27 @@
+String.prototype.head = function() {
+  if(this.length === 0 ) throw "NoSuchElement";
+  return this.charAt(0);
+};
+
+String.prototype.headOption = function() {
+  if(this.length === 0 ) return None;
+  return this.head();
+};
+
+String.prototype.last = function() {
+  if(this.length === 0 ) throw "NoSuchElement";
+  return this.charAt(this.length - 1);
+};
+
+/**
+ * 最初の文字をOptionでラップして返します
+ * @return {Option[String]} 最初の文字
+ */
+String.prototype.lastOption = function() {
+  if(this.length === 0 ) return None;
+  return this.last();
+};
+
 /**
  * 書式付文字列
  * @param arg
