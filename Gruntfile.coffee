@@ -4,6 +4,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks 'grunt-jstestdriver'
 
   grunt.initConfig
     pkg:grunt.file.readJSON('package.json')
@@ -29,10 +30,20 @@ module.exports = (grunt) ->
         src: "build/<%= pkg.name %>.js"
         dest: "build/<%= pkg.name %>.min.js"
 
+    jstestdriver: 
+      files: ["JsTestDriver.conf"]
+
     watch:
       coffee:
         files: "src/**/*.coffee"
-        tasks:["build"]
- 
-  grunt.registerTask "run", ["coffee", "concat", "uglify", "watch"]
-  grunt.registerTask "build", ["coffee", "concat", "uglify"]
+        tasks: ["build"]
+      changed:
+        files: "src/**/*.js"
+        tasks: ["build"]
+      jstestdriver:
+        files: ["build/<%= pkg.name %>.min.js", "test/**/*.js"]
+        tasks: ["build"]
+  
+  grunt.registerTask "test", ["jstestdriver"]
+  grunt.registerTask "run", ["coffee", "concat", "uglify", "jstestdriver", "watch"]
+  grunt.registerTask "build", ["coffee", "concat", "uglify", "jstestdriver"]
