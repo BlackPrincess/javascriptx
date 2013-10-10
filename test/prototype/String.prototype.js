@@ -24,6 +24,18 @@ TestCase("Test String Prototype", {
     assertEquals(None, actual);
   },
 
+  "test String.prototype.left" : function() {
+    var actual = "abcd".left(2);
+    assertEquals("ab", actual);
+    assertEquals("", "".left(10));
+  },
+
+  "test String.prototype.right" : function() {
+    var actual = "abcd".right(2);
+    assertEquals("cd", actual);
+    assertEquals("abcd", "abcd".right(10));
+  },
+
   "test String.prototype.format": function(){
     var actual = "{0} is Foo.{1} is Bar".format("Foo", "Bar");
     assertString(actual);

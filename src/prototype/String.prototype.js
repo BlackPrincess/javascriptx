@@ -23,6 +23,27 @@ String.prototype.lastOption = function() {
 };
 
 /**
+ * 文字列の左側からlength分だけきりとって返します。
+ * lengthより文字列の長さが短い場合は、文字列がそのまま返ります。
+ * @param length {Int}
+ * @returm {String}
+ */
+String.prototype.left = function(length) {
+  return this.substring(0, length);
+};
+
+/**
+ * 文字列の右側からlength分だけきりとって返します。
+ * lengthより文字列の長さが短い場合は、文字列そのままが返ります
+ * @param length {Int}
+ * @returm {String}
+ */
+String.prototype.right = function(length) {
+  var start = this.length - length < 0 ? 0 : this.length - length;
+  return this.substring(start, this.length);
+};
+
+/**
  * 書式付文字列
  * @param arg
  * @return {String} 文字列
