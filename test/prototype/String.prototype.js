@@ -36,6 +36,16 @@ TestCase("Test String Prototype", {
     assertEquals("abcd", "abcd".right(10));
   },
 
+  "test String.prototype.startsWith" : function() {
+    assertTrue("abcd".startsWith("ab"));
+    assertFalse("abcd".startsWith("cd"));
+  },
+
+  "test String.prototype.endsWith" : function() {
+    assertTrue("abcd".endsWith("cd"));
+    assertFalse("abcd".endsWith("ab"));
+  },
+
   "test String.prototype.format": function(){
     var actual = "{0} is Foo.{1} is Bar".format("Foo", "Bar");
     assertString(actual);

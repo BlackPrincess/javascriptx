@@ -1067,6 +1067,24 @@ String.prototype.right = function(length) {
 };
 
 /**
+ * 先頭がstrで始まっているかどうかを返します。
+ * @param str
+ * @returm {Boolean}
+ */
+String.prototype.startsWith = function(str) {
+  return this.left(str.length) === str;
+};
+
+/**
+ * 末尾がstrで終わっているかどうかを返します。
+ * @param str
+ * @returm {Boolean}
+ */
+String.prototype.endsWith = function(str) {
+  return this.right(str.length) === str;
+};
+
+/**
  * 書式付文字列
  * @param arg
  * @return {String} 文字列
