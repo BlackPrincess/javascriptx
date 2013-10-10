@@ -26,3 +26,10 @@ Function.prototype.compose = function(g) {
 		return self(g(arg));
 	};
 };
+
+Function.prototype.tupled = function(g) {
+  var self = this;
+  return function(args) {
+    return self.apply(self, args);
+  };
+};

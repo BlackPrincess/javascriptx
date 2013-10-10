@@ -46,4 +46,10 @@ TestCase("Test Function Prototype",{
 		var actual = target(1);
 		assertEquals(12, actual);
 	},
+
+	"test Function.prototype.tupled" : function() {
+		var f = function(a,b,c) { return a + b * c}
+		var g = f.tupled();
+		assertEquals(f(1,2,3), g([1,2,3]));
+	}
 });
