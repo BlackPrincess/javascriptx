@@ -20,6 +20,8 @@ TestCase("Test String Prototype", {
   "test String.prototype.headOption" : function() {
     var actual = "".headOption();
     assertEquals(None, actual);
+    var actual2 = "abc".headOption();
+    assertEquals("a", actual2.get());
   },
 
   "test String.prototype.last" : function() {
@@ -32,6 +34,8 @@ TestCase("Test String Prototype", {
   "test String.prototype.lastOption" : function() {
     var actual = "".lastOption();
     assertEquals(None, actual);
+    var actual2 = "abc".lastOption();
+    assertEquals("c", actual2.get());
   },
 
   "test String.prototype.left" : function() {

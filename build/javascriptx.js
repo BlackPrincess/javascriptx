@@ -1036,28 +1036,40 @@ String.prototype.nonEmpty = function() {
   return this.length !== 0;
 };
 
+/*
+ * 最初の文字を返します。空文字の場合には例外をはきます
+ * @return {String} 最初の文字
+ */
 String.prototype.head = function() {
   if(this.isEmpty()) throw "NoSuchElement";
   return this.charAt(0);
-};
-
-String.prototype.headOption = function() {
-  if(this.isEmpty()) return None;
-  return this.head();
-};
-
-String.prototype.last = function() {
-  if(this.isEmpty()) throw "NoSuchElement";
-  return this.charAt(this.length - 1);
 };
 
 /**
  * 最初の文字をOptionでラップして返します
  * @return {Option[String]} 最初の文字
  */
+String.prototype.headOption = function() {
+  if(this.isEmpty()) return None;
+  return Some(this.head());
+};
+
+/*
+ * 最後の文字を返します。空文字の場合には例外をはきます
+ * @return {String} 最後の文字
+ */
+String.prototype.last = function() {
+  if(this.isEmpty()) throw "NoSuchElement";
+  return this.charAt(this.length - 1);
+};
+
+/**
+ * 最後の文字をOptionでラップして返します
+ * @return {Option[String]} 最後の文字
+ */
 String.prototype.lastOption = function() {
   if(this.isEmpty()) return None;
-  return this.last();
+  return Some(this.last());
 };
 
 /**
