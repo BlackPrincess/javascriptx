@@ -1210,3 +1210,30 @@ String.prototype.removeFullWidth = function() {
 };
 
 
+
+(function() {
+  Boolean.unless = function(bool) {
+    return function(f) {
+      if (!bool) {
+        return f();
+      }
+    };
+  };
+
+  Boolean.when = function(bool) {
+    return function(f) {
+      if (bool) {
+        return f();
+      }
+    };
+  };
+
+  Boolean.prototype.unless = function(f) {
+    return Boolean.unless(this.toString() === true.toString())(f);
+  };
+
+  Boolean.prototype.when = function(f) {
+    return Boolean.when(this.toString() === true.toString())(f);
+  };
+
+}).call(this);

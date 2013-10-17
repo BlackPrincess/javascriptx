@@ -13,7 +13,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: 'src/'
-          src: ['src/**/*.coffee']
+          src: ['**/*.coffee']
           dest: 'tmp/'
           ext: '.js'
         ]
@@ -36,13 +36,13 @@ module.exports = (grunt) ->
     watch:
       coffee:
         files: "src/**/*.coffee"
-        tasks: ["build"]
+        tasks: ["coffee"]
       changed:
-        files: "src/**/*.js"
+        files: ["src/**/*.js","tmp/**/*.js"]
         tasks: ["build"]
       jstestdriver:
-        files: ["build/<%= pkg.name %>.min.js", "test/**/*.js"]
-        tasks: ["build"]
+        files: ["test/**/*.js"]
+        tasks: ["jstestdriver"]
   
   grunt.registerTask "test", ["jstestdriver"]
   grunt.registerTask "run", ["coffee", "concat", "uglify", "jstestdriver", "watch"]
