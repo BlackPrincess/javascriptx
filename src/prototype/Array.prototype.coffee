@@ -35,6 +35,12 @@ Array::getOrElse = (i, orV) ->
   else 
     orV
 
+Array::getOrElseUpdate = (i, op) ->
+  if this[i] != undefined
+    this[i] 
+  else 
+    this[i] = op
+    op
 ###
 # Returns a sequence formed from this sequence and another sequence 
 # by combining corresponding elements in pairs

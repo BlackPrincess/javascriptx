@@ -37,6 +37,12 @@ TestCase("Test Array Prototype",{
     var actual = ["foo", "bar"].getOrElse(2, "hoge");
     assertEquals("hoge", actual);
   },
+  "test Array.prototype.getOrElseUpdate" : function() {
+    var target = ["foo", "bar"];
+    var actual = target.getOrElseUpdate(2, "hoge");
+    assertEquals("hoge", actual);
+    assertEquals(3, target.length);
+  },
 
   "test Array.prototype.zip" : function() {
     var target = ["foo", "bar", "hoge"];

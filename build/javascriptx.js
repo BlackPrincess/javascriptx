@@ -1183,6 +1183,15 @@ String.prototype.removeFullWidth = function() {
     }
   };
 
+  Array.prototype.getOrElseUpdate = function(i, op) {
+    if (this[i] !== void 0) {
+      return this[i];
+    } else {
+      this[i] = op;
+      return op;
+    }
+  };
+
   /*
   # Returns a sequence formed from this sequence and another sequence 
   # by combining corresponding elements in pairs
