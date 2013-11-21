@@ -41,6 +41,11 @@ Array::getOrElseUpdate = (i, op) ->
   else 
     this[i] = op
     op
+
+Array::flatten = () ->
+  this.reduce (a,b) ->
+    a.concat b
+
 ###
 # Returns a sequence formed from this sequence and another sequence 
 # by combining corresponding elements in pairs
@@ -76,4 +81,3 @@ Array::zipAll = (arr, defaultA, defaultB) ->
 
 Array::clone = () ->
   Array.apply(null, this)
-

@@ -1192,6 +1192,12 @@ String.prototype.removeFullWidth = function() {
     }
   };
 
+  Array.prototype.flatten = function() {
+    return this.reduce(function(a, b) {
+      return a.concat(b);
+    });
+  };
+
   /*
   # Returns a sequence formed from this sequence and another sequence 
   # by combining corresponding elements in pairs
