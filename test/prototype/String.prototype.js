@@ -38,16 +38,16 @@ TestCase("Test String Prototype", {
     assertEquals("c", actual2.get());
   },
 
-  "test String.prototype.left" : function() {
-    var actual = "abcd".left(2);
+  "test String.prototype.take" : function() {
+    var actual = "abcd".take(2);
     assertEquals("ab", actual);
-    assertEquals("", "".left(10));
+    assertEquals("", "".take(10));
   },
 
-  "test String.prototype.right" : function() {
-    var actual = "abcd".right(2);
+  "test String.prototype.takeRight" : function() {
+    var actual = "abcd".takeRight(2);
     assertEquals("cd", actual);
-    assertEquals("abcd", "abcd".right(10));
+    assertEquals("abcd", "abcd".takeRight(10));
   },
 
   "test String.prototype.contains" : function () {

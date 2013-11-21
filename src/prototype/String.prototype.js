@@ -48,7 +48,7 @@ String.prototype.lastOption = function() {
  * @param length {Int}
  * @returm {String}
  */
-String.prototype.left = function(length) {
+String.prototype.take = function(length) {
   return this.substring(0, length);
 };
 
@@ -58,7 +58,7 @@ String.prototype.left = function(length) {
  * @param length {Int}
  * @returm {String}
  */
-String.prototype.right = function(length) {
+String.prototype.takeRight = function(length) {
   var start = this.length - length < 0 ? 0 : this.length - length;
   return this.substring(start, this.length);
 };
