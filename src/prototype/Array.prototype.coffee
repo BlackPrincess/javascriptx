@@ -22,12 +22,10 @@ Array::last = () ->
   else
     this[this.length - 1]
 
-Array::lastOption = () ->
-  Option.apply(this[this.length - 1])
+Array::lastOption = () -> Option.apply(this[this.length - 1])
 
 
-Array::get = (i) ->
-  this[i]
+Array::get = (i) -> this[i]
 
 Array::getOrElse = (i, orV) ->
   if this[i] != undefined
@@ -71,20 +69,15 @@ Array::transpose = () ->
   ret
 
 
-Array::take = (n) ->
-  this.trimStart(n)
+Array::take = (n) -> this.trimStart(n)
 
-Array::drop = (n) ->
-  this.trimeEnd(n)
+Array::drop = (n) -> this.trimeEnd(n)
 
-Array::trimStart = (n) ->
-  this.slice n
+Array::trimStart = (n) -> this.slice n
 
-Array::trimEnd = (n) ->
-  this.slice 0, this.length - n
+Array::trimEnd = (n) -> this.slice 0, this.length - n
 
-Array::sliceAt = (n) ->
-  [
+Array::sliceAt = (n) -> [
     this.slice(0, n),
     this.slice(n)
   ]
@@ -162,5 +155,4 @@ Array::unzip3 = (f) ->
     tuples.map (a) => a[2]
   ]
 
-Array::clone = () ->
-  Array.apply(null, this)
+Array::clone = () -> Array.apply(null, this)

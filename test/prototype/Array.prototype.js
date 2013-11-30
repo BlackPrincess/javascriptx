@@ -50,8 +50,8 @@ TestCase("Test Array Prototype",{
   },
 
   "test Array.prototype.flatMap" : function() {
-   var actual = [[1,2], [3,4]].flatMap(function(a) { return a.map(function(i){ return i * 2;}) });
-   assertEquals([2,4,6,8].toString(), actual.toString())
+    var actual = [[1,2], [3,4]].flatMap(function(a) { return a.map(function(i){ return i * 2;}) });
+    assertEquals([2,4,6,8].toString(), actual.toString())
   },
 
   "test Array.prototype.mapValues" : function() {
