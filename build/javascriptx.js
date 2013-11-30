@@ -1026,7 +1026,7 @@ String.prototype.contains = function(str) {
  * @returm {Boolean}
  */
 String.prototype.startsWith = function(str) {
-  return this.left(str.length) === str;
+  return this.take(str.length) === str;
 };
 
 /**
@@ -1035,7 +1035,7 @@ String.prototype.startsWith = function(str) {
  * @returm {Boolean}
  */
 String.prototype.endsWith = function(str) {
-  return this.right(str.length) === str;
+  return this.takeRight(str.length) === str;
 };
 
 /**
