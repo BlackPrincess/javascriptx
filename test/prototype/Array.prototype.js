@@ -54,7 +54,32 @@ TestCase("Test Array Prototype",{
    assertEquals([2,4,6,8].toString(), actual.toString())
   },
 
+  "test Array.prototype.trimStart" : function() {
+    var actual = ['a', 'b', 'c', 'd'].trimStart(2);
+    assertEquals(['c', 'd'].toString(), actual.toString());
+  },
 
+  "test Array.prototype.trimEnd" : function() {
+    var actual = ['a', 'b', 'c', 'd'].trimEnd(2);
+    assertEquals(['a', 'b'].toString(), actual.toString());
+  },
+
+  "test Array.prototype.insert" : function() {
+    var actual = ['a','b'].insert(1, 'c');
+    assertEquals(['a','c','b'].toString(), actual.toString());
+    var actual2 = ['a', 'b'].insert(1, 'c', 'd');
+    assertEquals(['a', 'c', 'd', 'b'].toString(), actual2.toString());
+  },
+
+  "test Array.prototype.insertAll" : function() {
+    var actual = ['a', 'b'].insertAll(1, ['c','d']);
+    assertEquals(['a', 'c', 'd', 'b'].toString(), actual.toString());
+  },
+
+  "test Array.prototype.remove" : function() {
+    var actual = ['a', 'b', 'c', 'd'].remove(1, 2);
+    assertEquals(['a', 'd'].toString(), actual.toString());
+  },
 
   "test Array.prototype.zip" : function() {
     var target = ["foo", "bar", "hoge"];

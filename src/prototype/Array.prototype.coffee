@@ -50,6 +50,38 @@ Array::flatMap = (f) ->
   this.reduce((a,b) ->
     a.concat f(b)
   ,[])
+
+Array::trimStart = (n) ->
+  this.slice n
+
+Array::trimEnd = (n) ->
+  this.slice 0, this.length - n
+
+Array::insert = (index, value, args) ->
+  args = Array.prototype.slice.call(arguments)
+  args = if args.length > 2
+    [value].concat(args.trimStart(2))
+  else
+    [value]
+  heads = this.slice 0, index
+  tails = this.slice index
+  heads.concat(args).concat(tails)
+
+Array::insertAll = (index, arr) ->
+  heads = this.slice 0, index
+  tails = this.slice index
+  heads.concat(arr).concat(tails)
+
+###
+#
+###
+Array::remove = (index, count) ->
+  # think twice
+  count = Option.apply(count).getOrElse(1)
+  heads = this.slice 0, index
+  tails = this.slice index + count
+  heads.concat(tails)
+
 ###
 # Returns a sequence formed from this sequence and another sequence 
 # by combining corresponding elements in pairs

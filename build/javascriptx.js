@@ -1204,6 +1204,43 @@ String.prototype.removeFullWidth = function() {
     }, []);
   };
 
+  Array.prototype.trimStart = function(n) {
+    return this.slice(n);
+  };
+
+  Array.prototype.trimEnd = function(n) {
+    return this.slice(0, this.length - n);
+  };
+
+  Array.prototype.insert = function(index, value, args) {
+    var heads, tails;
+    args = Array.prototype.slice.call(arguments);
+    args = args.length > 2 ? [value].concat(args.trimStart(2)) : [value];
+    heads = this.slice(0, index);
+    tails = this.slice(index);
+    return heads.concat(args).concat(tails);
+  };
+
+  Array.prototype.insertAll = function(index, arr) {
+    var heads, tails;
+    heads = this.slice(0, index);
+    tails = this.slice(index);
+    return heads.concat(arr).concat(tails);
+  };
+
+  /*
+  #
+  */
+
+
+  Array.prototype.remove = function(index, count) {
+    var heads, tails;
+    count = Option.apply(count).getOrElse(1);
+    heads = this.slice(0, index);
+    tails = this.slice(index + count);
+    return heads.concat(tails);
+  };
+
   /*
   # Returns a sequence formed from this sequence and another sequence 
   # by combining corresponding elements in pairs
