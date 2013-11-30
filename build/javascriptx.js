@@ -1204,12 +1204,24 @@ String.prototype.removeFullWidth = function() {
     }, []);
   };
 
+  Array.prototype.take = function(n) {
+    return this.trimStart(n);
+  };
+
+  Array.prototype.drop = function(n) {
+    return this.trimeEnd(n);
+  };
+
   Array.prototype.trimStart = function(n) {
     return this.slice(n);
   };
 
   Array.prototype.trimEnd = function(n) {
     return this.slice(0, this.length - n);
+  };
+
+  Array.prototype.sliceAt = function(n) {
+    return [this.slice(0, n), this.slice(n)];
   };
 
   Array.prototype.insert = function(index, value, args) {

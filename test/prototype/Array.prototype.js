@@ -64,6 +64,12 @@ TestCase("Test Array Prototype",{
     assertEquals(['a', 'b'].toString(), actual.toString());
   },
 
+  "test Array.prototype.sliceAt" : function() {
+    var actual = [0,1,2,3].sliceAt(3);
+    assertEquals(3, actual[0].length);
+    assertEquals(1, actual[1].length);
+  },
+
   "test Array.prototype.insert" : function() {
     var actual = ['a','b'].insert(1, 'c');
     assertEquals(['a','c','b'].toString(), actual.toString());

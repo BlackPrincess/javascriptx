@@ -51,11 +51,23 @@ Array::flatMap = (f) ->
     a.concat f(b)
   ,[])
 
+Array::take = (n) ->
+  this.trimStart(n)
+
+Array::drop = (n) ->
+  this.trimeEnd(n)
+
 Array::trimStart = (n) ->
   this.slice n
 
 Array::trimEnd = (n) ->
   this.slice 0, this.length - n
+
+Array::sliceAt = (n) ->
+  [
+    this.slice(0, n),
+    this.slice(n)
+  ]
 
 Array::insert = (index, value, args) ->
   args = Array.prototype.slice.call(arguments)
