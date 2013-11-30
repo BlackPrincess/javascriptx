@@ -77,6 +77,17 @@ Array::trimStart = (n) -> this.slice n
 
 Array::trimEnd = (n) -> this.slice 0, this.length - n
 
+Array::distinct = ->
+  u = {}
+  ret = []
+  for i in [0..this.length]
+    if u.hasOwnProperty(this[i])
+      continue
+    ret.push(this[i])
+    u[this[i]] = true
+  # think twice
+  ret.filter (a) -> Option.apply(a) != None
+
 Array::sliceAt = (n) -> [
     this.slice(0, n),
     this.slice(n)
@@ -154,5 +165,7 @@ Array::unzip3 = (f) ->
     tuples.map (a) -> a[1]
     tuples.map (a) => a[2]
   ]
+
+
 
 Array::clone = () -> Array.apply(null, this)

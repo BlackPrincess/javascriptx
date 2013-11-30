@@ -1250,6 +1250,22 @@ String.prototype.removeFullWidth = function() {
     return this.slice(0, this.length - n);
   };
 
+  Array.prototype.distinct = function() {
+    var i, ret, u, _i, _ref;
+    u = {};
+    ret = [];
+    for (i = _i = 0, _ref = this.length; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+      if (u.hasOwnProperty(this[i])) {
+        continue;
+      }
+      ret.push(this[i]);
+      u[this[i]] = true;
+    }
+    return ret.filter(function(a) {
+      return Option.apply(a) !== None;
+    });
+  };
+
   Array.prototype.sliceAt = function(n) {
     return [this.slice(0, n), this.slice(n)];
   };
