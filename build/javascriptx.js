@@ -1198,6 +1198,12 @@ String.prototype.removeFullWidth = function() {
     });
   };
 
+  Array.prototype.flatMap = function(f) {
+    return this.reduce(function(a, b) {
+      return a.concat(f(b));
+    }, []);
+  };
+
   /*
   # Returns a sequence formed from this sequence and another sequence 
   # by combining corresponding elements in pairs

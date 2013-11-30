@@ -49,6 +49,13 @@ TestCase("Test Array Prototype",{
     assertEquals([1,2,3,4].toString(), actual.toString());
   },
 
+  "test Array.prototype.flatMap" : function() {
+   var actual = [[1,2], [3,4]].flatMap(function(a) { return a.map(function(i){ return i * 2;}) });
+   assertEquals([2,4,6,8].toString(), actual.toString())
+  },
+
+
+
   "test Array.prototype.zip" : function() {
     var target = ["foo", "bar", "hoge"];
     var actual = target.zip(["FOO", "BAR"]);

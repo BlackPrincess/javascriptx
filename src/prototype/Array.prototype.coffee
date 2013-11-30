@@ -46,6 +46,10 @@ Array::flatten = () ->
   this.reduce (a,b) ->
     a.concat b
 
+Array::flatMap = (f) ->
+  this.reduce((a,b) ->
+    a.concat f(b)
+  ,[])
 ###
 # Returns a sequence formed from this sequence and another sequence 
 # by combining corresponding elements in pairs
