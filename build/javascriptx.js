@@ -1204,6 +1204,36 @@ String.prototype.removeFullWidth = function() {
     }, []);
   };
 
+  Array.prototype.mapValues = function(f) {
+    var ret;
+    ret = [];
+    this.forEach(function(a) {
+      return ret[a] = f(a);
+    });
+    return ret;
+  };
+
+  Array.prototype.transpose = function() {
+    var a, argsLen, i, j, ret, _i, _j, _k, _len, _len1;
+    argsLen = None;
+    for (_i = 0, _len = this.length; _i < _len; _i++) {
+      a = this[_i];
+      if (argsLen !== None) {
+        argsLen = a.length;
+      } else if (argsLen !== a.length) {
+        throw "IllegalArgumentException";
+      }
+    }
+    ret = [];
+    for (i = _j = 0; 0 <= argsLen ? _j < argsLen : _j > argsLen; i = 0 <= argsLen ? ++_j : --_j) {
+      for (_k = 0, _len1 = this.length; _k < _len1; _k++) {
+        j = this[_k];
+        ret[i][j] = this[i];
+      }
+    }
+    return ret;
+  };
+
   Array.prototype.take = function(n) {
     return this.trimStart(n);
   };
@@ -1296,6 +1326,33 @@ String.prototype.removeFullWidth = function() {
     }).apply(this).map(function(i) {
       return [this[i] === void 0 ? defaultA : this[i], arr[i] === void 0 ? defaultB : arr[i]];
     }, this);
+  };
+
+  Array.prototype.unzip = function(f) {
+    var tuples;
+    tuples = this.map(f);
+    return [
+      tuples.map(function(a) {
+        return a[0];
+      }), tuples.map(function(a) {
+        return a[1];
+      })
+    ];
+  };
+
+  Array.prototype.unzip3 = function(f) {
+    var tuples,
+      _this = this;
+    tuples = this.map(f);
+    return [
+      tuples.map(function(a) {
+        return a[0];
+      }), tuples.map(function(a) {
+        return a[1];
+      }), tuples.map(function(a) {
+        return a[2];
+      })
+    ];
   };
 
   Array.prototype.clone = function() {

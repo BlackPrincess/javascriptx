@@ -51,6 +51,26 @@ Array::flatMap = (f) ->
     a.concat f(b)
   ,[])
 
+Array::mapValues = (f) ->
+  ret = []
+  this.forEach (a) ->
+    ret[a] = f(a)
+  ret
+
+Array::transpose = () ->
+  argsLen = None
+  for a in this
+    if argsLen != None
+      argsLen = a.length
+    else if argsLen != a.length
+      throw "IllegalArgumentException"
+  ret = []
+  for i in [0...argsLen]
+    for j in this
+      ret[i][j] = this[i]
+  ret
+
+
 Array::take = (n) ->
   this.trimStart(n)
 
@@ -126,6 +146,21 @@ Array::zipAll = (arr, defaultA, defaultB) ->
       if arr[i] == undefined then defaultB else arr[i]
     ]
   , this)
+
+Array::unzip = (f) ->
+  tuples = this.map(f)
+  [
+    tuples.map (a) -> a[0]
+    tuples.map (a) -> a[1]
+  ]
+
+Array::unzip3 = (f) ->
+  tuples = this.map(f)
+  [
+    tuples.map (a) -> a[0]
+    tuples.map (a) -> a[1]
+    tuples.map (a) => a[2]
+  ]
 
 Array::clone = () ->
   Array.apply(null, this)

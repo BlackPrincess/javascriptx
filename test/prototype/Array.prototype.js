@@ -54,6 +54,18 @@ TestCase("Test Array Prototype",{
    assertEquals([2,4,6,8].toString(), actual.toString())
   },
 
+  "test Array.prototype.mapValues" : function() {
+    var actual = ["test","string"].mapValues(function(a) { return a + " ok" });
+    assertEquals("test ok", actual["test"]);
+    assertEquals("string ok", actual["string"]);
+  },
+
+  "test Array.prototype.transpose" : function() {
+    var actual = [[1,2],[3,4],[5,6]].transpose();
+    assertEquals([1,3,5].toString(), [2,4,6].toString());
+    assertException(function(){ [[],[1]].transpose() },"IllegalArgumentException");
+  },
+
   "test Array.prototype.trimStart" : function() {
     var actual = ['a', 'b', 'c', 'd'].trimStart(2);
     assertEquals(['c', 'd'].toString(), actual.toString());
@@ -109,6 +121,24 @@ TestCase("Test Array Prototype",{
     var actual = target.zipAll(["FOO", "BAR", "HOGE", "PIYO"], "defaultA", "defaultB");
     assertEquals("defaultA", actual[3][0]);
     assertEquals("PIYO", actual[3][1]);
+  },
+
+  "test Array.prototype.unzip" : function() {
+    var actual = ["ab","cd"].unzip(function(a){ return [a[0], a[1]]});
+    assertEquals("a", actual[0][0]);
+    assertEquals("b", actual[1][0]);
+    assertEquals("c", actual[0][1]);
+    assertEquals("d", actual[1][1]);
+  },
+
+  "test Array.prototype.unzip3" : function() {
+    var actual = ["abc","def"].unzip3(function(a){ return [a[0], a[1], a[2]];});
+    assertEquals("a", actual[0][0]);
+    assertEquals("b", actual[1][0]);
+    assertEquals("c", actual[2][0]);
+    assertEquals("d", actual[0][1]);
+    assertEquals("e", actual[1][1]);
+    assertEquals("f", actual[2][1]);
   },
 
   "test Array.prototype.clone" : function() {
