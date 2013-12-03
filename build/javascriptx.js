@@ -1214,21 +1214,21 @@ String.prototype.removeFullWidth = function() {
   };
 
   Array.prototype.transpose = function() {
-    var a, argsLen, i, j, ret, _i, _j, _k, _len, _len1;
+    var a, argsLen, i, j, ret, _i, _j, _k, _len, _ref;
     argsLen = None;
     for (_i = 0, _len = this.length; _i < _len; _i++) {
       a = this[_i];
-      if (argsLen !== None) {
+      if (argsLen === None) {
         argsLen = a.length;
       } else if (argsLen !== a.length) {
-        throw "IllegalArgumentException";
+        throw new Error("IllegalArgumentException");
       }
     }
     ret = [];
     for (i = _j = 0; 0 <= argsLen ? _j < argsLen : _j > argsLen; i = 0 <= argsLen ? ++_j : --_j) {
-      for (_k = 0, _len1 = this.length; _k < _len1; _k++) {
-        j = this[_k];
-        ret[i][j] = this[i];
+      ret[i] = [];
+      for (j = _k = 0, _ref = this.length; 0 <= _ref ? _k < _ref : _k > _ref; j = 0 <= _ref ? ++_k : --_k) {
+        ret[i][j] = this[j][i];
       }
     }
     return ret;
@@ -1369,6 +1369,16 @@ String.prototype.removeFullWidth = function() {
         return a[2];
       })
     ];
+  };
+
+  Array.prototype.combinations = function(n) {
+    var i, _i;
+    for (i = _i = 0; 0 <= n ? _i < n : _i > n; i = 0 <= n ? ++_i : --_i) {
+      tree[i];
+    }
+    return this.filter(function(a) {
+      return a;
+    });
   };
 
   Array.prototype.clone = function() {

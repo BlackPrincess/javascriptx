@@ -58,14 +58,15 @@ Array::mapValues = (f) ->
 Array::transpose = () ->
   argsLen = None
   for a in this
-    if argsLen != None
+    if argsLen == None
       argsLen = a.length
     else if argsLen != a.length
-      throw "IllegalArgumentException"
+      throw new Error("IllegalArgumentException")
   ret = []
   for i in [0...argsLen]
-    for j in this
-      ret[i][j] = this[i]
+    ret[i] = []
+    for j in [0...this.length]
+      ret[i][j] = this[j][i]
   ret
 
 
@@ -166,6 +167,9 @@ Array::unzip3 = (f) ->
     tuples.map (a) => a[2]
   ]
 
-
+Array::combinations = (n) ->
+  for i in [0...n]
+    tree[i]
+  this.filter (a) -> a
 
 Array::clone = () -> Array.apply(null, this)

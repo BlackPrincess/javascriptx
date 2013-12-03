@@ -62,8 +62,9 @@ TestCase("Test Array Prototype",{
 
   "test Array.prototype.transpose" : function() {
     var actual = [[1,2],[3,4],[5,6]].transpose();
-    assertEquals([1,3,5].toString(), [2,4,6].toString());
-    assertException(function(){ [[],[1]].transpose() },"IllegalArgumentException");
+    assertEquals([1,3,5].toString(), actual[0].toString());
+    assertEquals([2,4,6].toString(), actual[1].toString());
+    assertException(function(){ [[],[1]].transpose() });
   },
 
   "test Array.prototype.trimStart" : function() {
