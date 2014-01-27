@@ -1235,19 +1235,35 @@ String.prototype.removeFullWidth = function() {
   };
 
   Array.prototype.take = function(n) {
-    return this.trimStart(n);
+    return this.slice(0, n);
+  };
+
+  Array.prototype.takeRight = function(n) {
+    return this.slice(this.length - n, this.length);
   };
 
   Array.prototype.drop = function(n) {
-    return this.trimeEnd(n);
+    return this.slice(n, this.length);
+  };
+
+  Array.prototype.dropRight = function(n) {
+    return this.slice(0, this.length - n);
   };
 
   Array.prototype.trimStart = function(n) {
-    return this.slice(n);
+    var i, _i;
+    for (i = _i = 0; 0 <= n ? _i < n : _i > n; i = 0 <= n ? ++_i : --_i) {
+      this.shift();
+    }
+    return this;
   };
 
   Array.prototype.trimEnd = function(n) {
-    return this.slice(0, this.length - n);
+    var i, _i, _ref;
+    for (i = _i = 0, _ref = this.length - n; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+      this.pop();
+    }
+    return this;
   };
 
   Array.prototype.distinct = function() {
@@ -1273,7 +1289,7 @@ String.prototype.removeFullWidth = function() {
   Array.prototype.insert = function(index, value, args) {
     var heads, tails;
     args = Array.prototype.slice.call(arguments);
-    args = args.length > 2 ? [value].concat(args.trimStart(2)) : [value];
+    args = args.length > 2 ? [value].concat(args.drop(2)) : [value];
     heads = this.slice(0, index);
     tails = this.slice(index);
     return heads.concat(args).concat(tails);

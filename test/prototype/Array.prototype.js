@@ -68,12 +68,34 @@ TestCase("Test Array Prototype",{
   },
 
   "test Array.prototype.trimStart" : function() {
-    var actual = ['a', 'b', 'c', 'd'].trimStart(2);
-    assertEquals(['c', 'd'].toString(), actual.toString());
+    var target = ['a', 'b', 'c', 'd'];
+    target.trimStart(2);
+    assertEquals(['c', 'd'].toString(), target.toString());
   },
 
   "test Array.prototype.trimEnd" : function() {
-    var actual = ['a', 'b', 'c', 'd'].trimEnd(2);
+    var target = ['a', 'b', 'c', 'd'];
+    target.trimEnd(2);
+    assertEquals(['a', 'b'].toString(), target.toString());
+  },
+
+  "test Array.prototype.take" : function() {
+    var actual = ['a', 'b', 'c', 'd'].take(2);
+    assertEquals(['a', 'b'].toString(), actual.toString());
+  },
+
+  "test Array.prototype.takeRight" : function() {
+    var actual = ['a', 'b', 'c', 'd'].takeRight(2);
+    assertEquals(['c', 'd'].toString(), actual.toString());
+  },
+
+  "test Array.prototype.drop" : function() {
+    var actual = ['a', 'b', 'c', 'd'].drop(2);
+    assertEquals(['c', 'd'].toString(), actual.toString());
+  },
+
+  "test Array.prototype.dropRight" : function() {
+    var actual = ['a', 'b', 'c', 'd'].dropRight(2);
     assertEquals(['a', 'b'].toString(), actual.toString());
   },
 

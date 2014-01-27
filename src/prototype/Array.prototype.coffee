@@ -70,13 +70,23 @@ Array::transpose = () ->
   ret
 
 
-Array::take = (n) -> this.trimStart(n)
+Array::take = (n) -> this.slice(0, n)
 
-Array::drop = (n) -> this.trimeEnd(n)
+Array::takeRight = (n) -> this.slice(this.length - n, this.length)
 
-Array::trimStart = (n) -> this.slice n
+Array::drop = (n) -> this.slice(n, this.length)
 
-Array::trimEnd = (n) -> this.slice 0, this.length - n
+Array::dropRight = (n) -> this.slice(0, this.length - n)
+
+Array::trimStart = (n) -> 
+  for i in [0...n]
+    this.shift()
+  this
+
+Array::trimEnd = (n) -> 
+  for i in [0...(this.length - n)]
+    this.pop()
+  this
 
 Array::distinct = ->
   u = {}
@@ -97,7 +107,7 @@ Array::sliceAt = (n) -> [
 Array::insert = (index, value, args) ->
   args = Array.prototype.slice.call(arguments)
   args = if args.length > 2
-    [value].concat(args.trimStart(2))
+    [value].concat(args.drop(2))
   else
     [value]
   heads = this.slice 0, index
