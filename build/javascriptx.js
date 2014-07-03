@@ -1,297 +1,3 @@
-function Either() {}
-
-Either.prototype.left = function() {
-  return Either.LeftProjection(this);
-};
-
-Either.prototype.right = function() {
-  return Either.RightProjection(this);
-};
-
-Either.prototype.fold = function(fa, fb) {
-  return (this.isLeft) ? fa(this.a) : fb(this.b);
-};
-
-Either.prototype.swap = function() {
-  return (this.isLeft) ? Right(this.a) : Left(this.b);
-};
-
-Either.prototype.joinRight = function() {
-  return (this.isRight) ? Right(this.b) : Left(Left(this.a));
-};
-
-Either.prototype.joinLeft = function() {
-  return (this.isLeft) ? Left(this.a) : Right(Right(this.b));
-};
-
-Either.merge = function(e) {
-  return (e.isLeft) ? e.a : e.b;
-};
-
-Either.LeftProjection = function(e) {
-  return new LeftProjection(e);
-};
-
-Either.RightProjection = function(e) {
-  return new RightProjection(e);
-};
-
-function Left(a) {
-  return new _Left(a);
-}
-
-function _Left(a) {
-  this.isLeft = true;
-  this.isRight = false;
-  this.a = a;
-  // this.b = undefined;
-}
-
-_Left.prototype = new Either();
-
-function Right(b) {
-  return new _Right(b);
-}
-
-function _Right(b) {
-  this.isLeft = false;
-  this.isRight = true;
-  // this.a = undefined;
-  this.b = b;
-}
-_Right.prototype = new Either();
-
-function LeftProjection(e) {
-  this.get = function() {
-    if(!e.isLeft) {
-      throw "Either.left.value on Right";
-    } else {
-      return e.a;
-    }
-  };
-
-  this.foreach = function(f) {
-    if(e.isLeft) {
-      return f(e.a);
-    }
-  };
-
-  this.getOrElse = function(or) {
-    return e.isLeft ? e.a : or;
-  };
-
-  this.forall = function(f) {
-    return e.isLeft ? f(e.a) : true;
-  };
-
-  this.exists = function(f) {
-    return e.isLeft ? f(e.a) : false;
-  };
-
-  this.flatMap = function(f) {
-    return e.isLeft ? f(e.a) : Right(e.b);
-  };
-
-  this.map = function(f) {
-    return e.isLeft ? Left(f(e.a)) : None;
-  };
-
-  this.filter = function(p) {
-    if(e.isLeft) {
-      return (p(e.a)) ? Some(Left(e.a)) : None;
-    } else {
-      return None;
-    }
-  };
-
-  this.toSeq = function() {
-    return e.isLeft ? [e.a] : [];
-  };
-
-  this.toOption = function() {
-    return e.isLeft ? Some(e.a) : None;
-  };
-}
-
-function RightProjection(e) {
-  this.get = function() {
-    if(!e.isRight) {
-      throw "Either.right.value on Left";
-    } else {
-      return e.b;
-    }
-  };
-
-  this.foreach = function(f) {
-    if(e.isRight) {
-      return f(e.b);
-    }
-  };
-
-  this.getOrElse = function(or) {
-    return e.isRight ? e.b : or;
-  };
-
-  this.forall = function(f) {
-    return e.isRight ? f(e.b) : true;
-  };
-
-  this.exists = function(f) {
-    return e.isRight ? f(e.b) : false;
-  };
-
-  this.flatMap = function(f) {
-    return e.isRight ? f(e.b) : Right(e.a);
-  };
-
-  this.map = function(f) {
-    return e.isRight ? Right(f(e.b)) : None;
-  };
-
-  this.filter = function(p) {
-    if(e.isRight) {
-      return (p(e.b)) ? Some(Right(e.b)) : None;
-    } else {
-      return None;
-    }
-  };
-
-  this.toSeq = function() {
-    return e.isRight ? [e.b] : [];
-  };
-
-  this.toOption = function() {
-    return e.isRight ? Some(e.b) : None;
-  };
-}
-var None;
-function Option() {
-}
-
-// Option.prototype = new Product();
-Option.prototype.equals = function(a) {
-  return (this.isEmpty && a.isEmpty) || (!this.isEmpty && !a.isEmpty && this.get() === a.get());
-};
-
-Option.prototype.isDefined = function() {
-  return !this.isEmpty;
-};
-
-Option.prototype.getOrElse = function(d) {
-  return this.isEmpty ? d : this.get();
-};
-
-Option.prototype.orNull = function() {
-  return this.isEmpty ? null : this.get();
-};
-
-Option.prototype.orElse = function(a) {
-  return this.isEmpty ? a : this;
-};
-
-Option.prototype.exists = function(p) {
-  return !this.isEmpty && p(this.get());
-};
-
-Option.prototype.forall = function(p) {
-  return this.isEmpty || p(this.get());
-};
-
-Option.prototype.map = function(f) {
-  return this.isEmpty ? None : Some(f(this.get()));
-};
-
-Option.prototype.flatMap = function(f) {
-  return this.isEmpty ? None : f(this.get());
-};
-
-Option.prototype.filter = function(p) {
-  return (this.isEmpty || p(this.get())) ? this : None;
-};
-
-Option.prototype.withFilter = function(a) {
-  var self = this;
-
-  function WithFilter(p){
-    this.map = function(f) {
-      return self.filter(p).map(f);
-    };
-    this.flatMap = function(f) {
-      return self.filter(p).flatMap(f);
-    };
-    this.foreach = function(f) {
-      return self.filter(p).foreach(f);
-    };
-    this.withFilter = function(q) {
-      return new WithFilter(function(x){ return p(x) && q(x);});
-    };
-  }
-  return new WithFilter(a);
-};
-
-// いらないんじゃね
-Option.prototype.fold = function(ifEmpty, f) {
-  return this.isEmpty ? ifEmpty() : f(this.get());
-};
-
-Option.prototype.match = function(some, none) {
-  return this.isEmpty ? none() : some(this.get());
-};
-
-Option.prototype.foreach = function(f) {
-  if(!this.isEmpty) {
-    return f(this.get());
-  }
-};
-
-Option.prototype.collect = function(pf) {
-  return (!this.isEmpty && pf.isDefinedAt(this.get())) ? Some(pf(this.get())) : None;
-};
-
-Option.prototype.iterator = function() {
-  return this.isEmpty ? [] : [this.get()];
-};
-
-// apply is not good?
-Option.apply = function(a) {
-  if(a === undefined || a === null) {
-    return None;
-  } else {
-    return Some(a);
-  }
-};
-
-function Some(a) {
-  return new _Some(a);
-}
-
-function _Some(a) {
-  this.isEmpty = false;
-  this.get = function() {
-    return a;
-  };
-}
-_Some.prototype = new Option();
-
-
-Some.apply = function(a) {
-  if(a === undefined) {
-    return None;
-  } else {
-    return new Some(a);  // null can come
-  }
-};
-
-function _None() {
-  this.isEmpty = true;
-  this.get = function() {
-    throw "NoSuchElementException(None.get)";
-  };
-}
-
-_None.prototype = new Option();
-
-None = new _None(); /*const*/
 // Production steps of ECMA-262, Edition 5, 15.4.4.18
 // Reference: http://es5.github.com/#x15.4.4.18
 if ( !Array.prototype.forEach ) {
@@ -641,498 +347,506 @@ if (!Array.prototype.some) {
   };
 }
 (function() {
-  /**
-   * 該当付きに何日あるかを返します
-   * @return {Number}
-   */
-  Date.prototype.getMonthLength = function() {
-    return this.getMonthLast().getDate();
-  };
+  var Either, Left, LeftProjection, Right, RightProjection, exports, _Left, _Right,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  /**
-   * 前の付きを返します
-   * @return {Date}
-   */
-  Date.prototype.getPrevMonth = function() {
-    return this.dateAdd("month", -1);
-  };
+  exports = this;
 
-  /**
-   * 翌月を返します
-   * @return {Date}
-   */
-  Date.prototype.getNextMonth = function() {
-    return this.dateAdd("month", 1);
-  };
+  Either = (function() {
+    function Either() {}
 
-  /**
-   * 月の初めの日を取得します
-   * @return {Date}
-   */
-  Date.prototype.getMonthFirst = function() {
-    var that = this.getDatePart();
-    that.setDate(1);
-    return that;
-  };
-
-  /**
-   * 月の終わりの日を取得します
-   * @return {Date}
-   */
-  Date.prototype.getMonthLast = function() {
-    var ret = this.getMonthFirst();
-    ret.setMonth(ret.getMonth() + 1);
-    ret.setDate(0);
-    return ret;
-  };
-
-  /**
-   * 日付の部分のみを返します。時間・分などの情報は切り捨てられます
-   * @return {Date}
-   */
-  Date.prototype.getDatePart = function(){
-    var ret = this.clone();
-    ret.setHours(0);
-    ret.setMinutes(0);
-    ret.setSeconds(0);
-    ret.setMilliseconds(0);
-    return ret;
-  };
-
-  // TODO: Hack me
-  var unificationDatePartName = function(datePartName) {
-    switch(datePartName) {
-    case "year":
-    case "y":
-      return "year";
-
-    case "month":
-    case "m":
-      return "month";
-
-    case "day":
-    case "date":
-    case "d":
-      return "day";
-
-    case "week":
-      return "week";
-
-    case "hour":
-      return "hour";
-
-    case "minute":
-      return "minute";
-
-    case "second":
-      return "second";
-
-    case "millisecond":
-      return "millisecond";
-    }
-  };
-
-  // TODO:Hack me
-  var datePartExec = function(datePartName, varArgs) {
-    switch(unificationDatePartName(datePartName)) {
-    case "year":
-      return this.thenYear(varArgs);
-
-    case "month":
-      return this.thenMonth(varArgs);
-
-    case "day":
-      return this.thenDay(varArgs);
-
-    case "week":
-      return this.thenWeek(varArgs);
-
-    case "hour":
-      return this.thenHour(varArgs);
-
-    case "minute":
-      return this.thenMinute(varArgs);
-
-    case "second":
-      return this.thenSecond(varArgs);
-
-    case "millisecond":
-      return this.thenMillisecond(varArgs);
-    }
-  };
-
-  /**
-   * 日付の部分を指定して加算を行います
-   * @param datePartName year,y,month,m,day,date,d,week,hour,minute,second,millisecondのいずれか
-   * @param spanCount 加算する値
-   * @return {Date}
-   */
-  Date.prototype.dateAdd = function(datePartName, spanCount) {
-    var self = this;
-    var ret = this.clone();
-    return datePartExec.call(
-      (function() {
-        this.thenYear = function() {
-          return self.dateAdd("month", spanCount * 12);
-        };
-        this.thenMonth = function() {
-          var d = ret.getDate();
-          ret.setDate(1);
-          ret.setMonth(ret.getMonth() + spanCount + 1);
-          ret.setDate(0);
-          ret.setDate(Math.min(d, ret.getDate()));
-          return ret;
-        };
-        this.thenDay = function() {
-          ret.setDate(ret.getDate() + spanCount);
-          return ret;
-        };
-        this.thenWeek = function() {
-          return self.dateAdd("day", spanCount * 7);
-        };
-        this.thenHour = function() {
-          ret.setHours(ret.getHours() + spanCount);
-          return ret;
-        };
-        this.thenMinute = function() {
-          ret.setMinutes(ret.getMinutes() + spanCount);
-          return ret;
-        };
-        this.thenSecond = function() {
-          ret.setSeconds(ret.getSeconds() + spanCount);
-          return ret;
-        };
-        this.thenMillisecond = function() {
-          ret.setMilliseconds(ret.getMilliseconds() + spanCount);
-          return ret;
-        };
-      })(), datePartName);
-  };
-
-  /**
-   *
-   * @param datePartName year,y,month,m,day,date,d,week,hour,minute,second,millisecondのいずれか
-   * @param dateTarget
-   * @return {Date}
-   */
-  Date.prototype.dateDiff = function(datePartName, dateTarget) {
-    var self = this;
-    return datePartExec.call(
-      (function() {
-        this.thenYear = function() {
-          return dateTarget.getFullYear() - self.getFullYear();
-        };
-        this.thenMonth = function() {
-          return self.dateDiff("year", dateTarget) * 12 + dateTarget.getMonth() - self.getMonth();
-        };
-        this.thenDay = function() {
-          var ticksBase = (new Date()).getDatePart().getTime();
-          return Math.floor((dateTarget.getTime() - ticksBase) / (1000*60*60*24)) -
-            Math.floor((self.getTime() - ticksBase) / (1000*60*60*24));
-        };
-        this.thenWeek = function() {
-          return Math.floor(self.dateDiff("day", dateTarget) / 7);
-        };
-        this.thenHour = function() {
-          var ticksBase = (new Date()).getDatePart().getTime();
-          return Math.floor((dateTarget.getTime() - ticksBase) / (1000*60*60)) -
-            Math.floor((self.getTime() - ticksBase) / (1000*60*60));
-        };
-        this.thenMinute = function() {
-          var ticksBase = (new Date()).getDatePart().getTime();
-          return Math.floor((dateTarget.getTime() - ticksBase) / (1000*60)) -
-            Math.floor((self.getTime() - ticksBase) / (1000*60));
-        };
-        this.thenSecond = function() {
-          var ticksBase = (new Date()).getDatePart().getTime();
-          return Math.floor((dateTarget.getTime() - ticksBase) / 1000) -
-            Math.floor((self.getTime() - ticksBase) / 1000);
-        };
-        this.thenMillisecond = function() {
-          return dateTarget.getTime() - self.getTime();
-        };
-      })(), datePartName);
-  };
-
-  /**
-   * @param format
-   * @return {String}
-   */
-  Date.prototype.toFormatString = function(format) {
-    // TODO:言語別に変更可能にする
-    var week = new Array("Sun","Mon","Tue","Web","Tur","Fri","Sat");
-
-    var yyyy = this.getFullYear().toString();
-    var yy = yyyy.slice(2);
-    var M = (this.getMonth() + 1).toString();
-    var MM = M.length === 1 ? "0" + M : M;
-    var d = this.getDate().toString();
-    var dd = d.length === 1 ? "0" + d : d;
-    var ddd = week[this.getDay()];
-    var H = this.getHours().toString();
-    var HH = H.length === 1 ? "0" + H : H;
-    var h = (this.getHours() % 12).toString();
-    var hh = h.length === 1 ? "0" + h : h;
-    var m = this.getMinutes().toString();
-    var mm = m.length === 1 ? "0" + m : m;
-    var s = this.getSeconds().toString();
-    var ss = s.length === 1 ? "0" + s : s;
-    var millis = "000" + this.getMilliseconds().toString();
-    var f = millis.substr(millis.length - 3, 1);
-    var ff = millis.substr(millis.length - 3, 2);
-    var fff = millis.substr(millis.length - 3, 3);
-
-    if(h === "0") {
-      h = "12";
-    }
-
-    return format
-      .replace(/yyyy/g, yyyy)
-      .replace(/yy/g, yy)
-      .replace(/MM/g, MM)
-      .replace(/M/g, M)
-      .replace(/ddd/g, ddd)
-      .replace(/dd/g, dd)
-      .replace(/d/g, d)
-      .replace(/HH/g, HH)
-      .replace(/H/g, H)
-      .replace(/hh/g, hh)
-      .replace(/h/g, h)
-      .replace(/mm/g, mm)
-      .replace(/m/g, m)
-      .replace(/ss/g, ss)
-      .replace(/s/g, s)
-      .replace(/fff/g, fff)
-      .replace(/ff/g, ff)
-      .replace(/f/g, f);
-  };
-
-  /**
-   *
-   * @return {Date}
-   */
-  Date.prototype.clone = function() {
-    return new Date(this.getTime());
-  };
-
-})();
-Function.prototype.curried = function() {
-  var f = this;
-  if (f.length === 0) {
-    return this;
-  }
-  function iterate(varArgs) {
-    if (varArgs.length >= f.length)
-      return f.apply(null, varArgs);
-    return function () {
-      return iterate(varArgs.concat(Array.prototype.slice.call(arguments)));
+    Either.prototype.left = function() {
+      return Either.LeftProjection(this);
     };
-  }
-  return iterate([]);
-};
 
-Function.prototype.andThen = function(g) {
-	var self = this;
-	return function(arg) {
-		return g(self(arg));
-	};
-};
+    Either.prototype.right = function() {
+      return Either.RightProjection(this);
+    };
 
-Function.prototype.compose = function(g) {
-	var self = this;
-	return function(arg) {
-		return self(g(arg));
-	};
-};
+    Either.prototype.fold = function(fa, fb) {
+      if (this.isLeft) {
+        return fa(this.a);
+      } else {
+        return fb(this.b);
+      }
+    };
 
-Function.prototype.tupled = function(g) {
-  var self = this;
-  return function(args) {
-    return self.apply(self, args);
-  };
-};
-String.prototype.isEmpty = function() {
-  return this.length === 0;
-};
+    Either.prototype.swap = function() {
+      if (this.isLeft) {
+        return Right(this.a);
+      } else {
+        return Left(this.b);
+      }
+    };
 
-String.prototype.nonEmpty = function() {
-  return this.length !== 0;
-};
+    Either.prototype.joinRight = function() {
+      if (this.isRight) {
+        return Right(this.b);
+      } else {
+        return Left(Left(this.a));
+      }
+    };
 
-/*
- * 最初の文字を返します。空文字の場合には例外をはきます
- * @return {String} 最初の文字
- */
-String.prototype.head = function() {
-  if(this.isEmpty()) throw "NoSuchElement";
-  return this.charAt(0);
-};
+    Either.prototype.joinLeft = function() {
+      if (this.isLeft) {
+        return Left(this.a);
+      } else {
+        return Right(Right(this.b));
+      }
+    };
 
-/**
- * 最初の文字をOptionでラップして返します
- * @return {Option[String]} 最初の文字
- */
-String.prototype.headOption = function() {
-  if(this.isEmpty()) return None;
-  return Some(this.head());
-};
+    Either.merge = function(e) {
+      if (e.isLeft) {
+        return e.a;
+      } else {
+        return e.b;
+      }
+    };
 
-/*
- * 最後の文字を返します。空文字の場合には例外をはきます
- * @return {String} 最後の文字
- */
-String.prototype.last = function() {
-  if(this.isEmpty()) throw "NoSuchElement";
-  return this.charAt(this.length - 1);
-};
+    Either.LeftProjection = function(e) {
+      return new LeftProjection(e);
+    };
 
-/**
- * 最後の文字をOptionでラップして返します
- * @return {Option[String]} 最後の文字
- */
-String.prototype.lastOption = function() {
-  if(this.isEmpty()) return None;
-  return Some(this.last());
-};
+    Either.RightProjection = function(e) {
+      return new RightProjection(e);
+    };
 
-/**
- * 文字列の左側からlength分だけきりとって返します。
- * lengthより文字列の長さが短い場合は、文字列がそのまま返ります。
- * @param length {Int}
- * @returm {String}
- */
-String.prototype.take = function(length) {
-  return this.substring(0, length);
-};
+    return Either;
 
-/**
- * 文字列の右側からlength分だけきりとって返します。
- * lengthより文字列の長さが短い場合は、文字列そのままが返ります
- * @param length {Int}
- * @returm {String}
- */
-String.prototype.takeRight = function(length) {
-  var start = this.length - length < 0 ? 0 : this.length - length;
-  return this.substring(start, this.length);
-};
+  })();
 
-String.prototype.contains = function(str) {
-  return this.indexOf(str) !== -1;
-};
-
-/**
- * 先頭がstrで始まっているかどうかを返します。
- * @param str
- * @returm {Boolean}
- */
-String.prototype.startsWith = function(str) {
-  return this.take(str.length) === str;
-};
-
-/**
- * 末尾がstrで終わっているかどうかを返します。
- * @param str
- * @returm {Boolean}
- */
-String.prototype.endsWith = function(str) {
-  return this.takeRight(str.length) === str;
-};
-
-/**
- * 書式付文字列
- * @param arg
- * @return {String} 文字列
- */
-String.prototype.format = function(arg) {
-  var repFn;
-  var str = this;
-  
-  if (typeof arg === "object") {
-    // "{name}".format({name:"name"})
-    repFn = function(a, b) { return arg[b] ? arg[b] : a; };
-  } else {
-    // "{0}".format("name");
-    var args = arguments;
-    var argLen = args.length - 1;
-    // {{0}} は {0} で出力させる。置き換えない
-    str = str.replace(/(?!\{)*\{\{(\w+)\}\}/g, function(a) {
-      args[++argLen] = a.replace("{{", "{").replace("}}", "}");
-      var ret = "{" + argLen + "}";
-      return ret;
-    });
-    repFn = function(a, b) { return args[ parseInt(b, 10) ]; };
-  }
-  
-  return str.replace( /(?!\{)*\{(\w+)\}/g, repFn );
-};
-
-/**
- * Int型へと変換します
- * @returns {Number} 変換した値
- */
-String.prototype.toInt = function() {
-  return parseInt(this, 10);
-};
-
-/**
- * Float型へと変換します
- * @returns {Number} 変換した値
- */
-String.prototype.toFloat = function() {
-  return parseFloat(this);
-};
-
-/**
- * Int型へと変換します。変換できない場合は0を返します
- * @returns {Number} 変換した値。または0
- */
-String.prototype.toIntOrZero = function() {
-  return (isNaN(this)) ? 0 : this.toInt();
-};
-
-/**
- * Float型へと変換します。変換できない場合は0.0を返します
- * @returns {Number} 変換した値。または0.0
- */
-String.prototype.toFloatOrZero = function() {
-  return (isNaN(this)) ? 0.0 : this.toFloat();
-};
-
-
-(function(){
-  var charCode = 0xFEE0;
-  /**
-   * 全角数字を半角数字へと変換します
-   * @returns {string} 全角数字が半角数字へと変換した文字列
-   */
-  String.prototype.toHalfNumber = function() {
-    return this.replace(/[０１２３４５６７８９]/g, function(a){
-      return String.fromCharCode(a.charCodeAt(0) - charCode);
-    }).replace(/\d+\．\d+/g, function(a) {
-      return a.replace("．", ".");
-    });
+  Left = function(a) {
+    return new _Left(a);
   };
 
-  /**
-   * 全角アルファベットを半角アルファベットへ変換します
-   * @returns {string} 全角アルファベットを半角アルファベットへと変換した文字列
-   */
-  String.prototype.toHalfAlphabet = function() {
-    return this.replace(/[Ａ-Ｚａ-ｚ]/g, function(s){
-      return String.fromCharCode(s.charCodeAt(0) - charCode);
-    });
+  _Left = (function(_super) {
+    __extends(_Left, _super);
+
+    function _Left(a) {
+      this.a = a;
+    }
+
+    _Left.prototype.isLeft = true;
+
+    _Left.prototype.isRight = false;
+
+    return _Left;
+
+  })(Either);
+
+  Right = function(b) {
+    return new _Right(b);
   };
-})();
 
-/**
- * 全角文字を取り除いた文字列を返します
- * @returns {string} 全角文字を取り除いた文字列
- */
-String.prototype.removeFullWidth = function() {
-  return this.replace(/[^!-~]/g, "");
-};
+  _Right = (function(_super) {
+    __extends(_Right, _super);
 
+    function _Right(b) {
+      this.b = b;
+    }
 
+    _Right.prototype.isLeft = false;
+
+    _Right.prototype.isRight = true;
+
+    return _Right;
+
+  })(Either);
+
+  LeftProjection = (function() {
+    function LeftProjection(e) {
+      this.e = e;
+    }
+
+    LeftProjection.prototype.get = function() {
+      if (!this.e.isLeft) {
+        throw "Either.left.value on Right";
+      } else {
+        return this.e.a;
+      }
+    };
+
+    LeftProjection.prototype.foreach = function(f) {
+      if (this.e.isLeft) {
+        return f(this.e.a);
+      }
+    };
+
+    LeftProjection.prototype.getOrElse = function(or_) {
+      if (this.e.isLeft) {
+        return this.e.a;
+      } else {
+        return or_;
+      }
+    };
+
+    LeftProjection.prototype.forall = function(f) {
+      if (this.e.isLeft) {
+        return f(this.e.a);
+      } else {
+        return true;
+      }
+    };
+
+    LeftProjection.prototype.exists = function(f) {
+      if (this.e.isLeft) {
+        return f(this.e.a);
+      } else {
+        return false;
+      }
+    };
+
+    LeftProjection.prototype.flatMap = function(f) {
+      if (this.e.isLeft) {
+        return f(this.e.a);
+      } else {
+        return Right(this.e.b);
+      }
+    };
+
+    LeftProjection.prototype.map = function(f) {
+      if (this.e.isLeft) {
+        return Left(f(this.e.a));
+      } else {
+        return None;
+      }
+    };
+
+    LeftProjection.prototype.filter = function(p) {
+      if (this.e.isLeft) {
+        if (p(this.e.a)) {
+          return Some(Left(this.e.a));
+        } else {
+          return None;
+        }
+      } else {
+        return None;
+      }
+    };
+
+    LeftProjection.prototype.toSeq = function() {
+      if (this.e.isLeft) {
+        return [this.e.a];
+      } else {
+        return [];
+      }
+    };
+
+    LeftProjection.prototype.toOption = function() {
+      if (this.e.isLeft) {
+        return Some(this.e.a);
+      } else {
+        return None;
+      }
+    };
+
+    return LeftProjection;
+
+  })();
+
+  RightProjection = (function() {
+    function RightProjection(e) {
+      this.e = e;
+    }
+
+    RightProjection.prototype.get = function() {
+      if (!this.e.isRight) {
+        throw "Either.right.value on Left";
+      } else {
+        return this.e.b;
+      }
+    };
+
+    RightProjection.prototype.foreach = function(f) {
+      if (this.e.isRight) {
+        return f(this.e.b);
+      }
+    };
+
+    RightProjection.prototype.getOrElse = function(or_) {
+      if (this.e.isRight) {
+        return this.e.b;
+      } else {
+        return or_;
+      }
+    };
+
+    RightProjection.prototype.forall = function(f) {
+      if (this.e.isRight) {
+        return f(this.e.b);
+      } else {
+        return true;
+      }
+    };
+
+    RightProjection.prototype.exists = function(f) {
+      if (this.e.isRight) {
+        return f(this.e.b);
+      } else {
+        return false;
+      }
+    };
+
+    RightProjection.prototype.flatMap = function(f) {
+      if (this.e.isRight) {
+        return f(this.e.b);
+      } else {
+        return Right(this.e.a);
+      }
+    };
+
+    RightProjection.prototype.map = function(f) {
+      if (this.e.isRight) {
+        return Right(f(this.e.b));
+      } else {
+        return None;
+      }
+    };
+
+    RightProjection.prototype.filter = function(p) {
+      if (this.e.isRight) {
+        if (p(this.e.b)) {
+          return Some(Right(this.e.b));
+        } else {
+          return None;
+        }
+      } else {
+        return None;
+      }
+    };
+
+    RightProjection.prototype.toSeq = function() {
+      if (this.e.isRight) {
+        return [this.e.b];
+      } else {
+        return [];
+      }
+    };
+
+    RightProjection.prototype.toOption = function() {
+      if (this.e.isRight) {
+        return Some(this.e.b);
+      } else {
+        return None;
+      }
+    };
+
+    return RightProjection;
+
+  })();
+
+  exports.Either = Either;
+
+  exports.Left = Left;
+
+  exports.Right = Right;
+
+}).call(this);
+
+(function() {
+  var None, Option, Some, exports, _None, _Some,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  exports = this;
+
+  Option = (function() {
+    function Option() {}
+
+    Option.prototype.equals = function(a) {
+      return (this.isEmpty && a.isEmpty) || (!this.isEmpty && !a.isEmpty && this.get() === a.get());
+    };
+
+    Option.prototype.isDefined = function() {
+      return !this.isEmpty;
+    };
+
+    Option.prototype.getOrElse = function(d) {
+      if (this.isEmpty) {
+        return d;
+      } else {
+        return this.get();
+      }
+    };
+
+    Option.prototype.orNull = function() {
+      if (this.isEmpty) {
+        return null;
+      } else {
+        return this.get();
+      }
+    };
+
+    Option.prototype.orElse = function(a) {
+      if (this.isEmpty) {
+        return a;
+      } else {
+        return this;
+      }
+    };
+
+    Option.prototype.exists = function(p) {
+      return !this.isEmpty && p(this.get());
+    };
+
+    Option.prototype.forall = function(p) {
+      return this.isEmpty || p(this.get());
+    };
+
+    Option.prototype.map = function(f) {
+      if (this.isEmpty) {
+        return None;
+      } else {
+        return Some(f(this.get()));
+      }
+    };
+
+    Option.prototype.flatMap = function(f) {
+      if (this.isEmpty) {
+        return None;
+      } else {
+        return f(this.get());
+      }
+    };
+
+    Option.prototype.filter = function(p) {
+      if (this.isEmpty || p(this.get())) {
+        return this;
+      } else {
+        return None;
+      }
+    };
+
+    Option.prototype.withFilter = function(a) {
+      var WithFilter, self;
+      WithFilter = function(p) {
+        this.map = function(f) {
+          return self.filter(p).map(f);
+        };
+        this.flatMap = function(f) {
+          return self.filter(p).flatMap(f);
+        };
+        this.foreach = function(f) {
+          return self.filter(p).foreach(f);
+        };
+        return this.withFilter = function(q) {
+          return new WithFilter(function(x) {
+            return p(x) && q(x);
+          });
+        };
+      };
+      self = this;
+      return new WithFilter(a);
+    };
+
+    Option.prototype.fold = function(ifEmpty, f) {
+      if (this.isEmpty) {
+        return ifEmpty();
+      } else {
+        return f(this.get());
+      }
+    };
+
+    Option.prototype.match = function(some, none) {
+      if (this.isEmpty) {
+        return none();
+      } else {
+        return some(this.get());
+      }
+    };
+
+    Option.prototype.foreach = function(f) {
+      if (!this.isEmpty) {
+        return f(this.get());
+      }
+    };
+
+    Option.prototype.collect = function(pf) {
+      if (!this.isEmpty && pf.isDefinedAt(this.get())) {
+        return Some(pf(this.get()));
+      } else {
+        return None;
+      }
+    };
+
+    Option.prototype.iterator = function() {
+      if (this.isEmpty) {
+        return [];
+      } else {
+        return [this.get()];
+      }
+    };
+
+    Option.apply = function(a) {
+      if (a === undefined || a === null) {
+        return None;
+      } else {
+        return Some(a);
+      }
+    };
+
+    return Option;
+
+  })();
+
+  Some = function(a) {
+    return new _Some(a);
+  };
+
+  Some.apply = function(a) {
+    return _Some.apply(a);
+  };
+
+  _Some = (function(_super) {
+    __extends(_Some, _super);
+
+    function _Some(a) {
+      this.a = a;
+    }
+
+    _Some.prototype.isEmpty = false;
+
+    _Some.prototype.get = function() {
+      return this.a;
+    };
+
+    _Some.apply = function(a) {
+      if (a === undefined) {
+        return None;
+      } else {
+        return Some(a);
+      }
+    };
+
+    return _Some;
+
+  })(Option);
+
+  _None = (function(_super) {
+    __extends(_None, _super);
+
+    function _None() {}
+
+    _None.prototype.isEmpty = true;
+
+    _None.prototype.get = function() {
+      throw "NoSuchElementException(None.get)";
+    };
+
+    return _None;
+
+  })(Option);
+
+  None = new _None();
+
+  exports.Option = Option;
+
+  exports.Some = Some;
+
+  exports.None = None;
+
+}).call(this);
 
 (function() {
   Array.prototype.sum = function() {
@@ -1426,6 +1140,537 @@ String.prototype.removeFullWidth = function() {
 
   Boolean.prototype.when = function(f) {
     return Boolean.when(this.toString() === true.toString())(f);
+  };
+
+}).call(this);
+
+/*
+該当付きに何日あるかを返します
+@return {Number}
+*/
+
+
+(function() {
+  var datePartExec, unificationDatePartName;
+
+  Date.prototype.getMonthLength = function() {
+    return this.getMonthLast().getDate();
+  };
+
+  /*
+  前の付きを返します
+  @return {Date}
+  */
+
+
+  Date.prototype.getPrevMonth = function() {
+    return this.dateAdd("month", -1);
+  };
+
+  /*
+  翌月を返します
+  @return {Date}
+  */
+
+
+  Date.prototype.getNextMonth = function() {
+    return this.dateAdd("month", 1);
+  };
+
+  /*
+  月の初めの日を取得します
+  @return {Date}
+  */
+
+
+  Date.prototype.getMonthFirst = function() {
+    var that;
+    that = this.getDatePart();
+    that.setDate(1);
+    return that;
+  };
+
+  /*
+  月の終わりの日を取得します
+  @return {Date}
+  */
+
+
+  Date.prototype.getMonthLast = function() {
+    var ret;
+    ret = this.getMonthFirst();
+    ret.setMonth(ret.getMonth() + 1);
+    ret.setDate(0);
+    return ret;
+  };
+
+  /*
+  日付の部分のみを返します。時間・分などの情報は切り捨てられます
+  @return {Date}
+  */
+
+
+  Date.prototype.getDatePart = function() {
+    var ret;
+    ret = this.clone();
+    ret.setHours(0);
+    ret.setMinutes(0);
+    ret.setSeconds(0);
+    ret.setMilliseconds(0);
+    return ret;
+  };
+
+  unificationDatePartName = function(datePartName) {
+    switch (datePartName) {
+      case "year":
+      case "y":
+        return "year";
+      case "month":
+      case "m":
+        return "month";
+      case "day":
+      case "date":
+      case "d":
+        return "day";
+      case "week":
+        return "week";
+      case "hour":
+        return "hour";
+      case "minute":
+        return "minute";
+      case "second":
+        return "second";
+      case "millisecond":
+        return "millisecond";
+    }
+  };
+
+  datePartExec = function(datePartName, varArgs) {
+    switch (unificationDatePartName(datePartName)) {
+      case "year":
+        return this.thenYear(varArgs);
+      case "month":
+        return this.thenMonth(varArgs);
+      case "day":
+        return this.thenDay(varArgs);
+      case "week":
+        return this.thenWeek(varArgs);
+      case "hour":
+        return this.thenHour(varArgs);
+      case "minute":
+        return this.thenMinute(varArgs);
+      case "second":
+        return this.thenSecond(varArgs);
+      case "millisecond":
+        return this.thenMillisecond(varArgs);
+    }
+  };
+
+  /*
+  日付の部分を指定して加算を行います
+  @param datePartName year,y,month,m,day,date,d,week,hour,minute,second,millisecondのいずれか
+  @param spanCount 加算する値
+  @return {Date}
+  */
+
+
+  Date.prototype.dateAdd = function(datePartName, spanCount) {
+    var ret, self;
+    self = this;
+    ret = this.clone();
+    return datePartExec.call((function() {
+      this.thenYear = function() {
+        return self.dateAdd("month", spanCount * 12);
+      };
+      this.thenMonth = function() {
+        var d;
+        d = ret.getDate();
+        ret.setDate(1);
+        ret.setMonth(ret.getMonth() + spanCount + 1);
+        ret.setDate(0);
+        ret.setDate(Math.min(d, ret.getDate()));
+        return ret;
+      };
+      this.thenDay = function() {
+        ret.setDate(ret.getDate() + spanCount);
+        return ret;
+      };
+      this.thenWeek = function() {
+        return self.dateAdd("day", spanCount * 7);
+      };
+      this.thenHour = function() {
+        ret.setHours(ret.getHours() + spanCount);
+        return ret;
+      };
+      this.thenMinute = function() {
+        ret.setMinutes(ret.getMinutes() + spanCount);
+        return ret;
+      };
+      this.thenSecond = function() {
+        ret.setSeconds(ret.getSeconds() + spanCount);
+        return ret;
+      };
+      this.thenMillisecond = function() {
+        ret.setMilliseconds(ret.getMilliseconds() + spanCount);
+        return ret;
+      };
+    })(), datePartName);
+  };
+
+  /*
+  @param datePartName year,y,month,m,day,date,d,week,hour,minute,second,millisecondのいずれか
+  @param dateTarget
+  @return {Date}
+  */
+
+
+  Date.prototype.dateDiff = function(datePartName, dateTarget) {
+    var self;
+    self = this;
+    return datePartExec.call((function() {
+      this.thenYear = function() {
+        return dateTarget.getFullYear() - self.getFullYear();
+      };
+      this.thenMonth = function() {
+        return self.dateDiff("year", dateTarget) * 12 + dateTarget.getMonth() - self.getMonth();
+      };
+      this.thenDay = function() {
+        var ticksBase;
+        ticksBase = (new Date()).getDatePart().getTime();
+        return Math.floor((dateTarget.getTime() - ticksBase) / (1000 * 60 * 60 * 24)) - Math.floor((self.getTime() - ticksBase) / (1000 * 60 * 60 * 24));
+      };
+      this.thenWeek = function() {
+        return Math.floor(self.dateDiff("day", dateTarget) / 7);
+      };
+      this.thenHour = function() {
+        var ticksBase;
+        ticksBase = (new Date()).getDatePart().getTime();
+        return Math.floor((dateTarget.getTime() - ticksBase) / (1000 * 60 * 60)) - Math.floor((self.getTime() - ticksBase) / (1000 * 60 * 60));
+      };
+      this.thenMinute = function() {
+        var ticksBase;
+        ticksBase = (new Date()).getDatePart().getTime();
+        return Math.floor((dateTarget.getTime() - ticksBase) / (1000 * 60)) - Math.floor((self.getTime() - ticksBase) / (1000 * 60));
+      };
+      this.thenSecond = function() {
+        var ticksBase;
+        ticksBase = (new Date()).getDatePart().getTime();
+        return Math.floor((dateTarget.getTime() - ticksBase) / 1000) - Math.floor((self.getTime() - ticksBase) / 1000);
+      };
+      this.thenMillisecond = function() {
+        return dateTarget.getTime() - self.getTime();
+      };
+    })(), datePartName);
+  };
+
+  /*
+  @param format
+  @return {String}
+  */
+
+
+  Date.prototype.toFormatString = function(format) {
+    var H, HH, M, MM, d, dd, ddd, f, ff, fff, h, hh, m, millis, mm, s, ss, week, yy, yyyy;
+    week = new Array("Sun", "Mon", "Tue", "Web", "Tur", "Fri", "Sat");
+    yyyy = this.getFullYear().toString();
+    yy = yyyy.slice(2);
+    M = (this.getMonth() + 1).toString();
+    MM = (M.length === 1 ? "0" + M : M);
+    d = this.getDate().toString();
+    dd = (d.length === 1 ? "0" + d : d);
+    ddd = week[this.getDay()];
+    H = this.getHours().toString();
+    HH = (H.length === 1 ? "0" + H : H);
+    h = (this.getHours() % 12).toString();
+    hh = (h.length === 1 ? "0" + h : h);
+    m = this.getMinutes().toString();
+    mm = (m.length === 1 ? "0" + m : m);
+    s = this.getSeconds().toString();
+    ss = (s.length === 1 ? "0" + s : s);
+    millis = "000" + this.getMilliseconds().toString();
+    f = millis.substr(millis.length - 3, 1);
+    ff = millis.substr(millis.length - 3, 2);
+    fff = millis.substr(millis.length - 3, 3);
+    if (h === "0") {
+      h = "12";
+    }
+    return format.replace(/yyyy/g, yyyy).replace(/yy/g, yy).replace(/MM/g, MM).replace(/M/g, M).replace(/ddd/g, ddd).replace(/dd/g, dd).replace(/d/g, d).replace(/HH/g, HH).replace(/H/g, H).replace(/hh/g, hh).replace(/h/g, h).replace(/mm/g, mm).replace(/m/g, m).replace(/ss/g, ss).replace(/s/g, s).replace(/fff/g, fff).replace(/ff/g, ff).replace(/f/g, f);
+  };
+
+  /*
+  @return {Date}
+  */
+
+
+  Date.prototype.clone = function() {
+    return new Date(this.getTime());
+  };
+
+}).call(this);
+
+(function() {
+  Function.prototype.curried = function() {
+    var f, iterate;
+    iterate = function(varArgs) {
+      if (varArgs.length >= f.length) {
+        return f.apply(null, varArgs);
+      }
+      return function() {
+        return iterate(varArgs.concat(Array.prototype.slice.call(arguments)));
+      };
+    };
+    f = this;
+    if (f.length === 0) {
+      return this;
+    }
+    return iterate([]);
+  };
+
+  Function.prototype.andThen = function(g) {
+    var self;
+    self = this;
+    return function(arg) {
+      return g(self(arg));
+    };
+  };
+
+  Function.prototype.compose = function(g) {
+    var self;
+    self = this;
+    return function(arg) {
+      return self(g(arg));
+    };
+  };
+
+  Function.prototype.tupled = function(g) {
+    var self;
+    self = this;
+    return function(args) {
+      return self.apply(self, args);
+    };
+  };
+
+}).call(this);
+
+(function() {
+  String.prototype.isEmpty = function() {
+    return this.length === 0;
+  };
+
+  String.prototype.nonEmpty = function() {
+    return this.length !== 0;
+  };
+
+  String.prototype.head = function() {
+    if (this.isEmpty()) {
+      throw "NoSuchElement";
+    }
+    return this.charAt(0);
+  };
+
+  /*
+  最初の文字をOptionでラップして返します
+  @return {Option[String]} 最初の文字
+  */
+
+
+  String.prototype.headOption = function() {
+    if (this.isEmpty()) {
+      return None;
+    }
+    return Some(this.head());
+  };
+
+  String.prototype.last = function() {
+    if (this.isEmpty()) {
+      throw "NoSuchElement";
+    }
+    return this.charAt(this.length - 1);
+  };
+
+  /*
+  最後の文字をOptionでラップして返します
+  @return {Option[String]} 最後の文字
+  */
+
+
+  String.prototype.lastOption = function() {
+    if (this.isEmpty()) {
+      return None;
+    }
+    return Some(this.last());
+  };
+
+  /*
+  文字列の左側からlength分だけきりとって返します。
+  lengthより文字列の長さが短い場合は、文字列がそのまま返ります。
+  @param length {Int}
+  @returm {String}
+  */
+
+
+  String.prototype.take = function(length) {
+    return this.substring(0, length);
+  };
+
+  /*
+  文字列の右側からlength分だけきりとって返します。
+  lengthより文字列の長さが短い場合は、文字列そのままが返ります
+  @param length {Int}
+  @returm {String}
+  */
+
+
+  String.prototype.takeRight = function(length) {
+    var start;
+    start = (this.length - length < 0 ? 0 : this.length - length);
+    return this.substring(start, this.length);
+  };
+
+  String.prototype.contains = function(str) {
+    return this.indexOf(str) !== -1;
+  };
+
+  /*
+  先頭がstrで始まっているかどうかを返します。
+  @param str
+  @returm {Boolean}
+  */
+
+
+  String.prototype.startsWith = function(str) {
+    return this.take(str.length) === str;
+  };
+
+  /*
+  末尾がstrで終わっているかどうかを返します。
+  @param str
+  @returm {Boolean}
+  */
+
+
+  String.prototype.endsWith = function(str) {
+    return this.takeRight(str.length) === str;
+  };
+
+  /*
+  書式付文字列
+  @param arg
+  @return {String} 文字列
+  */
+
+
+  String.prototype.format = function(arg) {
+    var argLen, args, repFn, str;
+    repFn = void 0;
+    str = this;
+    if (typeof arg === "object") {
+      repFn = function(a, b) {
+        if (arg[b]) {
+          return arg[b];
+        } else {
+          return a;
+        }
+      };
+    } else {
+      args = arguments;
+      argLen = args.length - 1;
+      str = str.replace(/(?!\{)*\{\{(\w+)\}\}/g, function(a) {
+        var ret;
+        args[++argLen] = a.replace("{{", "{").replace("}}", "}");
+        ret = "{" + argLen + "}";
+        return ret;
+      });
+      repFn = function(a, b) {
+        return args[parseInt(b, 10)];
+      };
+    }
+    return str.replace(/(?!\{)*\{(\w+)\}/g, repFn);
+  };
+
+  /*
+  Int型へと変換します
+  @returns {Number} 変換した値
+  */
+
+
+  String.prototype.toInt = function() {
+    return parseInt(this, 10);
+  };
+
+  /*
+  Float型へと変換します
+  @returns {Number} 変換した値
+  */
+
+
+  String.prototype.toFloat = function() {
+    return parseFloat(this);
+  };
+
+  /*
+  Int型へと変換します。変換できない場合は0を返します
+  @returns {Number} 変換した値。または0
+  */
+
+
+  String.prototype.toIntOrZero = function() {
+    if (isNaN(this)) {
+      return 0;
+    } else {
+      return this.toInt();
+    }
+  };
+
+  /*
+  Float型へと変換します。変換できない場合は0.0を返します
+  @returns {Number} 変換した値。または0.0
+  */
+
+
+  String.prototype.toFloatOrZero = function() {
+    if (isNaN(this)) {
+      return 0.0;
+    } else {
+      return this.toFloat();
+    }
+  };
+
+  (function() {
+    var charCode;
+    charCode = 0xFEE0;
+    /*
+    全角数字を半角数字へと変換します
+    @returns {string} 全角数字が半角数字へと変換した文字列
+    */
+
+    String.prototype.toHalfNumber = function() {
+      return this.replace(/[０１２３４５６７８９]/g, function(a) {
+        return String.fromCharCode(a.charCodeAt(0) - charCode);
+      }).replace(/\d+\．\d+/g, function(a) {
+        return a.replace("．", ".");
+      });
+    };
+    /*
+    全角アルファベットを半角アルファベットへ変換します
+    @returns {string} 全角アルファベットを半角アルファベットへと変換した文字列
+    */
+
+    String.prototype.toHalfAlphabet = function() {
+      return this.replace(/[Ａ-Ｚａ-ｚ]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - charCode);
+      });
+    };
+  })();
+
+  /*
+  全角文字を取り除いた文字列を返します
+  @returns {string} 全角文字を取り除いた文字列
+  */
+
+
+  String.prototype.removeFullWidth = function() {
+    return this.replace(/[^!-~]/g, "");
   };
 
 }).call(this);
