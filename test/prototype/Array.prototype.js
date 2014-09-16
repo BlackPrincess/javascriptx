@@ -174,5 +174,11 @@ TestCase("Test Array Prototype",{
     actual.clone().shift();
     assertEquals(1, actual[0]);
     assertEquals(2, actual[1]);
+  },
+
+  "test Array.prototype.toMap" : function() {
+    var actual = [["key", "value"], ["key2", "value2"]].toMap();
+    assertEquals(actual["key"], "value");
+    assertEquals(actual["key2"], "value2");
   }
 });

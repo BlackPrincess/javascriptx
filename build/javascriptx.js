@@ -1115,6 +1115,15 @@ if (!Array.prototype.some) {
     return Array.apply(null, this);
   };
 
+  Array.prototype.toMap = function() {
+    var ret;
+    ret = [];
+    this.map(function(a) {
+      return ret[a[0]] = a[1];
+    });
+    return ret;
+  };
+
 }).call(this);
 
 (function() {

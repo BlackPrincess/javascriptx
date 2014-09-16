@@ -183,3 +183,9 @@ Array::combinations = (n) ->
   this.filter (a) -> a
 
 Array::clone = () -> Array.apply(null, this)
+
+Array::toMap = () ->
+  ret = []
+  this.map (a) ->
+    ret[a[0]] = a[1]
+  ret
