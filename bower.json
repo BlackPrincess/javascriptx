@@ -1,0 +1,17 @@
+{
+  "name": "javascriptx",
+  "version": "0.0.0",
+  "homepage": "https://github.com/BlackPrincess/javascriptx",
+  "authors": [
+    "Kurokawa <black.princess.w@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "main": "build/javascriptx.min.js"
+}
