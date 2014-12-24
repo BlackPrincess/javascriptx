@@ -13,5 +13,7 @@
     "test",
     "tests"
   ],
-  "main": "build/javascriptx.min.js"
+  "main": "build/javascriptx.min.js",
+  "dependencies" : {
+  }
 }
