@@ -109,6 +109,12 @@ TestCase("Test Array Prototype",{
     assertEquals(3, actual[0].length);
     assertEquals(1, actual[1].length);
   },
+  
+  "test Array.prototype.exist" : function() {
+    var arr = [0,1];
+    assertTrue(arr.exist(1));
+    assertFalse(arr.exist(2));
+  },
 
   "test Array.prototype.insert" : function() {
     var actual = ['a','b'].insert(1, 'c');

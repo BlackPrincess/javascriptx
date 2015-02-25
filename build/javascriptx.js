@@ -1000,6 +1000,10 @@ if (!Array.prototype.some) {
     return [this.slice(0, n), this.slice(n)];
   };
 
+  Array.prototype.exist = function(a) {
+    return this.indexOf(a) !== -1;
+  };
+
   Array.prototype.insert = function(index, value, args) {
     var heads, tails;
     args = Array.prototype.slice.call(arguments);
