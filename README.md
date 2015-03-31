@@ -1,4 +1,4 @@
-# JavascriptX.js
+# JavascriptX
 
 An extension to the core javascript libray.  
 
@@ -7,9 +7,9 @@ I don't know, but there is probably a better one out there. :)
 
 ## Browser
 
-just put the following code.
+Insert the following code into the HTML file you want include JavascriptX in:
 
-```
+``` html
 <script src="/javascriptx/build/javascriptx.min.js type="text/javascript"></script>
 ```
 
@@ -20,7 +20,7 @@ just put the following code.
 "0123".toIntOrZero() // 123
 "NaN".toIntOrZero() // 0
 
-"{0} is {1}".format("cat", "cut")    // cat is cute
+"The {0} is {1}".format("cat", "cute")    // The cat is cute
 "０１２３．４５".toHalfNumber()     // 123.45 
 "ｑｗｒｔｙ".toHalfAlphabet()     // qwrty
 
@@ -31,7 +31,7 @@ var f = (function(a,b,c,d){
 (new Date(2013, 0, 1)).dateDiff("month", new Date(2014, 2, 1)); // 12
 ```
 
-you can see more in /test
+You can see more in [`/test`](https://github.com/BlackPrincess/javascriptx/tree/master/test)
 
 ## TODO
 anything!!  
